@@ -33,7 +33,6 @@ CONFIG(debug, debug|release) {
 
 SOURCES += main.cpp \
     widgets/mainwindow.cpp \
-    widgets/rcomponent.cpp \
     protocol/datastruct.cpp \
     protocol/protocoldata.cpp \
     file/globalconfigfile.cpp \
@@ -42,7 +41,6 @@ SOURCES += main.cpp \
 
 HEADERS  += \
     widgets/mainwindow.h \
-    widgets/rcomponent.h \
     constants.h \
     protocol/datastruct.h \
     protocol/protocoldata.h \

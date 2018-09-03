@@ -7,3 +7,10 @@ SUBDIRS += \
     Network \
     Base \
     Core
+
+#for ( sub,SUBDIRS){
+#    message($$sub)
+#}
+
+vari = getenv(CONFIG)
+message($$vari)
