@@ -51,18 +51,17 @@ HEADERS  += \
 FORMS    += mainwindow.ui
 
 win32-msvc2013{
-    LIBS += ../Lib/Util.lib
-    LIBS+= ../Lib/Network.lib
     LIBS+= ../Lib/Base.lib
+    LIBS+= ../Lib/Network.lib
 }
 
 win32-g++{
-    LIBS+= -L../Lib/ -lUtil -lBase
+    LIBS+= -L../Lib/ -lBase
     QMAKE_CXXFLAGS_WARN_ON += -Wno-reorder
 }
 
 unix{
-    LIBS+= -L../Lib/ -lNetwork -lUtil -lBase
+    LIBS+= -L../Lib/ -lNetwork -lBase
 }
 
 INCLUDEPATH += $$PWD/../

@@ -3,9 +3,8 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 SUBDIRS += \
-    Util \
-    Network \
     Base \
+    Network \
     Core
 
 #for ( sub,SUBDIRS){

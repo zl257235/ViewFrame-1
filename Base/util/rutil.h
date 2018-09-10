@@ -15,9 +15,9 @@
 #include <QString>
 #include <QSettings>
 
-#include "util_global.h"
+#include "../base_global.h"
 
-class UTILSHARED_EXPORT RUtil
+class BASESHARED_EXPORT RUtil
 {
 public:
     RUtil();

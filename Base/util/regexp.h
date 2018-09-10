@@ -14,9 +14,9 @@
 #include <QObject>
 #include <QMap>
 
-#include "util_global.h"
+#include "../base_global.h"
 
-class UTILSHARED_EXPORT RegExp
+class BASESHARED_EXPORT RegExp
 {
 public:
     RegExp();

@@ -1,9 +1,9 @@
 ﻿#include "globalconfigfile.h"
 
-#include "Util/rutil.h"
-#include "Util/rsingleton.h"
+#include "Base/util/rutil.h"
+#include "Base/util/rlog.h"
+#include "Base/util/rsingleton.h"
 #include "constants.h"
-#include "Util/rlog.h"
 
 GlobalConfigFile::GlobalConfigFile():settings(nullptr)
 {

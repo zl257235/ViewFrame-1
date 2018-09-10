@@ -11,11 +11,11 @@
 #ifndef SCALESWITCHER_H
 #define SCALESWITCHER_H
 
-#include "util_global.h"
+#include "../base_global.h"
 
 #include <QString>
 
-class UTILSHARED_EXPORT ScaleSwitcher
+class BASESHARED_EXPORT ScaleSwitcher
 {
 public:
     ScaleSwitcher();

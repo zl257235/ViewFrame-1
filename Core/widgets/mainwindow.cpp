@@ -9,7 +9,7 @@
 #include "base/actionmanager/action.h"
 #include "base/pluginmanager/pluginmanager.h"
 #include "constants.h"
-#include "Util/rsingleton.h"
+#include "Base/util/rsingleton.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

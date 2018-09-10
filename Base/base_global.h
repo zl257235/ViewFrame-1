@@ -1,5 +1,5 @@
-﻿#ifndef NETWORK_GLOBAL_H
-#define NETWORK_GLOBAL_H
+﻿#ifndef BASE_GLOBAL_H
+#define BASE_GLOBAL_H
 
 #include <QtCore/qglobal.h>
 

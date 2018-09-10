@@ -13,7 +13,7 @@
 
 #include <QSettings>
 
-#include "Util/rlog.h"
+#include "Base/util/rlog.h"
 #include "../protocol/datastruct.h"
 
 class GlobalConfigFile

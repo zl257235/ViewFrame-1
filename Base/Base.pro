@@ -1,4 +1,4 @@
-QT       += core widgets
+QT       += core widgets xml
 
 CONFIG += c++11
 
@@ -39,7 +39,16 @@ HEADERS += \
     actionmanager/id.h \
     base_global.h \
     messagetype.h \
-    component/rcomponent.h
+    component/rcomponent.h \
+    util/fileutils.h \
+    util/rbuffer.h \
+    util/regexp.h \
+    util/rlog.h \
+    util/rsingleton.h \
+    util/rutil.h \
+    util/scaleswitcher.h \
+    selfwidget/dialogproxy.h \
+    selfwidget/rbutton.h
 
 SOURCES += \
     pluginmanager/observer.cpp \
@@ -50,4 +59,13 @@ SOURCES += \
     actionmanager/actionmanager.cpp \
     actionmanager/command.cpp \
     actionmanager/id.cpp \
-    component/rcomponent.cpp
+    component/rcomponent.cpp \
+    util/fileutils.cpp \
+    util/rbuffer.cpp \
+    util/regexp.cpp \
+    util/rlog.cpp \
+    util/rsingleton.cpp \
+    util/rutil.cpp \
+    util/scaleswitcher.cpp \
+    selfwidget/dialogproxy.cpp \
+    selfwidget/rbutton.cpp

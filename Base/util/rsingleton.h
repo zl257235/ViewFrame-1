@@ -13,8 +13,6 @@
 
 #include <QObject>
 
-#include "util_global.h"
-
 /*!
     模板类和函数只是可复用的源代码，是不需要导出的，
     只需在调用时#include头文件就行。因为模板要在实例化之后才会生成obj，进而链接成DLL。

@@ -12,14 +12,11 @@
 #ifndef RLOG_H
 #define RLOG_H
 
-#define RLOG_INFO(...)       RLog::log(RLog::RINFO,__FILE__,__FUNCTION__,__LINE__, __VA_ARGS__)
-#define RLOG_WARNING(...)    RLog::log(RLog::RWARNING, __FILE__,__FUNCTION__, __LINE__,__VA_ARGS__)
-#define RLOG_ERROR(...)      RLog::log(RLog::RERROR,__FILE__,__FUNCTION__,__LINE__,__VA_ARGS__)
 #include <QFile>
 
-#include "util_global.h"
+#include "../base_global.h"
 
-class UTILSHARED_EXPORT RLog : public QObject
+class BASESHARED_EXPORT RLog : public QObject
 {
     Q_OBJECT
 public:
@@ -58,5 +55,9 @@ private:
     static bool isFileReady;
     static RLOG_LEVEL logLevel;
 };
+
+#define RLOG_INFO(...)       RLog::log(RLog::RINFO,__FILE__,__FUNCTION__,__LINE__, __VA_ARGS__)
+#define RLOG_WARNING(...)    RLog::log(RLog::RWARNING, __FILE__,__FUNCTION__, __LINE__,__VA_ARGS__)
+#define RLOG_ERROR(...)      RLog::log(RLog::RERROR,__FILE__,__FUNCTION__,__LINE__,__VA_ARGS__)
 
 #endif // RLOG_H

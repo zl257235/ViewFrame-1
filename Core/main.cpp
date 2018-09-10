@@ -6,12 +6,12 @@
 #include <QTranslator>
 #include <QMessageBox>
 
-#include "Util/rutil.h"
-#include "Util/rlog.h"
+#include "Base/util/rutil.h"
+#include "Base/util/rlog.h"
+#include "Base/util/rsingleton.h"
 #include "constants.h"
 #include "global.h"
 #include "file/globalconfigfile.h"
-#include "Util/rsingleton.h"
 
 #if _MSC_VER >= 1600
 #pragma execution_character_set("utf-8")

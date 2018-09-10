@@ -71,9 +71,5 @@ SOURCES += \
 INCLUDEPATH += $$PWD/../../ViewFrame/
 
 win32-msvc2013{
-    LIBS += ../Lib/Util.lib
-}
-
-unix{
-    LIBS+= -L../Lib/ -lNetwork -lUtil
+    LIBS+= -L../Lib/ -lBase
 }

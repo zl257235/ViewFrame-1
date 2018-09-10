@@ -14,11 +14,12 @@
 
 #include <QByteArray>
 #include <QString>
-#include "util_global.h"
+
+#include "../base_global.h"
 
 #define BUFFER_DEFAULT_SIZE 1024
 
-class UTILSHARED_EXPORT RBuffer
+class BASESHARED_EXPORT RBuffer
 {
 public:
     RBuffer(int defaultSize = BUFFER_DEFAULT_SIZE);
