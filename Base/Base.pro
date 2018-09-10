@@ -1,4 +1,5 @@
 QT       += core widgets xml
+QT       += sql
 
 CONFIG += c++11
 
@@ -48,7 +49,13 @@ HEADERS += \
     util/rutil.h \
     util/scaleswitcher.h \
     selfwidget/dialogproxy.h \
-    selfwidget/rbutton.h
+    selfwidget/rbutton.h \
+    sql/autotransaction.h \
+    sql/database.h \
+    sql/databasemanager.h \
+    sql/datatable.h \
+    sql/rpersistence.h \
+    protocol/datastruct.h
 
 SOURCES += \
     pluginmanager/observer.cpp \
@@ -68,4 +75,10 @@ SOURCES += \
     util/rutil.cpp \
     util/scaleswitcher.cpp \
     selfwidget/dialogproxy.cpp \
-    selfwidget/rbutton.cpp
+    selfwidget/rbutton.cpp \
+    sql/autotransaction.cpp \
+    sql/database.cpp \
+    sql/databasemanager.cpp \
+    sql/datatable.cpp \
+    sql/rpersistence.cpp \
+    protocol/datastruct.cpp

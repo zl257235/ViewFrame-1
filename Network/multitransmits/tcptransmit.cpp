@@ -15,10 +15,7 @@ namespace ServerNetwork{
 TcpTransmit::TcpTransmit():
     BaseTransmit(),tcpSocket(nullptr)
 {
-    dataPacketRule = std::make_shared<TCPDataPacketRule>();
 
-    sendFunc = std::bind(&TcpTransmit::sendIocpData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
-    byteSendFunc = std::bind(&TcpTransmit::sendByteData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
 }
 
 TcpTransmit::~TcpTransmit()
@@ -36,6 +33,15 @@ QString TcpTransmit::name()
     return "TCP";
 }
 
+bool TcpTransmit::initialize()
+{
+    dataPacketRule = std::make_shared<TCPDataPacketRule>();
+
+    sendFunc = std::bind(&TcpTransmit::sendIocpData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
+    byteSendFunc = std::bind(&TcpTransmit::sendByteData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
+    return true;
+}
+
 /*!
  * @brief 开始传输指定的数据单元
  * @param[in] SendUnit 待发送的数据单元
@@ -45,6 +51,9 @@ QString TcpTransmit::name()
  */
 bool TcpTransmit::startTransmit(SendUnit &unit)
 {
+    if(!netConnected || unit.method != type())
+        return false;
+
     if(dataPacketRule->wrap(unit,sendFunc))
         return true;
 

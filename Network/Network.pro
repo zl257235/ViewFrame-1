@@ -47,7 +47,8 @@ HEADERS += \
     connection/seriesconnection.h \
     connection/tcpclient.h \
     wraprule/tcpdatapacketrule.h \
-    wraprule/wraprule.h
+    wraprule/wraprule.h \
+    multitransmits/transmits.h
 
 SOURCES += \
     netglobal.cpp \
@@ -66,7 +67,8 @@ SOURCES += \
     connection/seriesconnection.cpp \
     connection/tcpclient.cpp \
     wraprule/tcpdatapacketrule.cpp \
-    wraprule/wraprule.cpp
+    wraprule/wraprule.cpp \
+    multitransmits/transmits.cpp
 
 INCLUDEPATH += $$PWD/../../ViewFrame/
 
