@@ -55,7 +55,8 @@ HEADERS += \
     sql/databasemanager.h \
     sql/datatable.h \
     sql/rpersistence.h \
-    protocol/datastruct.h
+    protocol/datastruct.h \
+    constants.h
 
 SOURCES += \
     pluginmanager/observer.cpp \

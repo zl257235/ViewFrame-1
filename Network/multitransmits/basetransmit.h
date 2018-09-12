@@ -41,6 +41,6 @@ protected:
 
 }
 
-typedef std::shared_ptr<ServerNetwork::BaseTransmit> BaseTransmit_Ptr;
+typedef std::shared_ptr<ServerNetwork::BaseTransmit> BaseTransmitPtr;
 
 #endif // BASETRANSMIT_H

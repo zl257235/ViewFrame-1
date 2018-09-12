@@ -13,8 +13,8 @@
 
 #include <QDockWidget>
 
-#include "./actionmanager/id.h"
-#include "pluginmanager/observer.h"
+#include "../actionmanager/id.h"
+#include "../pluginmanager/observer.h"
 #include "../messagetype.h"
 
 class BASESHARED_EXPORT RComponent : public QDockWidget,public Observer

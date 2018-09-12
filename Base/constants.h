@@ -56,9 +56,9 @@ const char DB_PORT[] = "Port";
 const char SELECTED_LINE_COLOR[] = "rgb(34, 175, 75)";              /*!< 选中行的背景颜色 */
 
 //插件
-const char PLUGIN_BASEINFO[] = "Rimserver.Plugin.BaseInfo";
-const char PLUGIN_CONNECTION[] = "Rimserver.Plugin.Connection";
-const char PLUGIN_OPERATE[] = "Rimserver.Plugin.Operate";
+const char PLUGIN_TASK_CONTROL[] = "Rimserver.Plugin.TaskControl";
+const char PLUGIN_HEALTH_MANAGER[] = "Rimserver.Plugin.HealthManager";
+const char PLUGIN_DATA_VIEW[] = "Rimserver.Plugin.DataView";
 
 //菜单栏
 const char MENU_BAR[] = "Rimserver.MenuBar";

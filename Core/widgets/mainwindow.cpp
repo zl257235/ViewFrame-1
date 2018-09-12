@@ -4,12 +4,14 @@
 #include <QAction>
 #include <QDebug>
 
-#include "base/actionmanager/actioncontainer.h"
-#include "base/actionmanager/actionmanager.h"
-#include "base/actionmanager/action.h"
-#include "base/pluginmanager/pluginmanager.h"
-#include "constants.h"
+#include "Base/actionmanager/actioncontainer.h"
+#include "Base/actionmanager/actionmanager.h"
+#include "Base/actionmanager/action.h"
+#include "Base/pluginmanager/pluginmanager.h"
+#include "Base/constants.h"
 #include "Base/util/rsingleton.h"
+
+#include "widgets/taskcontrol/taskcontrolpanel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -145,27 +147,26 @@ void MainWindow::initComponent()
         delete centeral;
 
     //TODO 20180824 待从各个dll中读取
+    TaskControlModel::TaskControlPanel * taskControl = new TaskControlModel::TaskControlPanel;
 
+    addDockWidget(Qt::LeftDockWidgetArea,taskControl);
 
-    //TODO 20180824 考虑布局
 //    addDockWidget(Qt::LeftDockWidgetArea,baseInfoPanel);
 //    splitDockWidget(baseInfoPanel,operatePanel,Qt::Vertical);
 //    addDockWidget(Qt::RightDockWidgetArea,connectionPanel);
 
-//    RSingleton<PluginManager>::instance()->addPlugin(baseInfoPanel);
-//    RSingleton<PluginManager>::instance()->addPlugin(connectionPanel);
-//    RSingleton<PluginManager>::instance()->addPlugin(operatePanel);
+    RSingleton<PluginManager>::instance()->addPlugin(taskControl);
 
-//    RSingleton<PluginManager>::instance()->load();
-//    PluginManager::ComponentMap maps = RSingleton<PluginManager>::instance()->plugins();
+    RSingleton<PluginManager>::instance()->load();
+    PluginManager::ComponentMap maps = RSingleton<PluginManager>::instance()->plugins();
 
-//    PluginManager::ComponentMap::iterator iter = maps.begin();
-//    while(iter != maps.end()){
-//        RComponent * comp = iter.value();
-//        comp->setFeatures(QDockWidget::DockWidgetMovable);
-//        comp->setWindowTitle(comp->name());
-//        comp->initialize();
+    PluginManager::ComponentMap::iterator iter = maps.begin();
+    while(iter != maps.end()){
+        RComponent * comp = iter.value();
+        comp->setFeatures(QDockWidget::DockWidgetMovable);
+        comp->setWindowTitle(comp->name());
+        comp->initialize();
 
-//        iter++;
-//    }
+        iter++;
+    }
 }
