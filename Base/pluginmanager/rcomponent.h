@@ -17,6 +17,8 @@
 #include "../pluginmanager/observer.h"
 #include "../messagetype.h"
 
+namespace Base{
+
 class BASESHARED_EXPORT RComponent : public QDockWidget,public Observer
 {
     Q_OBJECT
@@ -37,5 +39,7 @@ protected:
     QString m_name;
 
 };
+
+} //namespace Base
 
 #endif // RCOMPONENT_H

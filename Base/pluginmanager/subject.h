@@ -18,6 +18,8 @@
 #include "../messagetype.h"
 #include "../base_global.h"
 
+namespace Base{
+
 class Observer;
 
 class BASESHARED_EXPORT Subject
@@ -34,5 +36,7 @@ private:
     std::list<Observer *> observers;
     std::mutex m_mutex;
 };
+
+} //namespace Base
 
 #endif // SUBJECT_H

@@ -11,7 +11,7 @@
 #ifndef DATATABLE_H
 #define DATATABLE_H
 
-#include "../base_global.h"
+#include "../../base_global.h"
 
 #include <QString>
 

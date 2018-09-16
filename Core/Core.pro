@@ -11,7 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ViewFrame
 TEMPLATE = app
 
-TRANSLATIONS += $${TARGET}_zh_CN.ts
 #RC_ICONS += $${TARGET}.ico
 
 CONFIG(debug, debug|release) {

@@ -22,7 +22,7 @@
 #include <QVector>
 #include <QList>
 
-#include "../base_global.h"
+#include "../../base_global.h"
 
 /*!
     @note  条件查询可分为多种组合，如from table where a = 1 and b != 3 or c like '%a%';

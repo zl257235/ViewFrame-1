@@ -75,8 +75,8 @@ const char PROGRAM_EXIT[] = "Rimserver.Program.Exit";
 //Setting 分组
 const char TOP_HINT[] = "Rimserver.Setting.TopHint";
 const char FULL_SCREEN[] = "Rimserver.Setting.FullScreen";
-const char ROUTE_TABLE_SETTING[] = "Rimserver.Setting.RouteSetting";
-const char SERIPORT_SETTING[] = "Rimserver.Setting.SeriportSetting";
+const char CUSTOM_STYLE[] = "Rimserver.Setting.CustomStyle";
+const char SYSTEM_LANGUAGE[] = "Rimserver.Setting.SystemLanguage";
 
 //G_HELP 分组
 const char TEC_SUPPORT[] = "Rimserver.Help.TecSupport";

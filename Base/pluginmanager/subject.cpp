@@ -2,6 +2,8 @@
 
 #include "observer.h"
 
+namespace Base{
+
 Subject::Subject()
 {
 
@@ -30,3 +32,5 @@ void Subject::notify(MessageType::MessageType type)
         iter++;
     }
 }
+
+} //namespace Base

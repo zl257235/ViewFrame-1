@@ -18,6 +18,8 @@
 #include "../actionmanager/id.h"
 #include "../base_global.h"
 
+namespace Base{
+
 class RComponent;
 
 class BASESHARED_EXPORT PluginManager : public QObject
@@ -36,5 +38,7 @@ private:
     ComponentMap componentMap;
     std::mutex  m_mutex;
 };
+
+} //namespace Base
 
 #endif // PLUGINMANAGER_H

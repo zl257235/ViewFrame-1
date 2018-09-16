@@ -18,7 +18,7 @@ namespace MessageType
  *  @details
  */
 enum MessageType{
-
+    MESS_LAN_CHANGED            /*!< 语言切换 */
 };
 }
 

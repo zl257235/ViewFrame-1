@@ -12,6 +12,7 @@
 #include <QList>
 #include <QMessageBox>
 
+#include "Base/util/rsingleton.h"
 #include "modelview/tableview.h"
 #include "modelview/tableviewmodel.h"
 #include "modelview/tableviewdelegate.h"
@@ -52,7 +53,7 @@ public:
     TableViewModel * taskViewModel;
     TableViewDelegate * taskViewDelegate;
 
-    QPushButton * m_MissionButton;
+    QPushButton * distrbuteButt;
     QWidget * m_centralWidget;
 
     QWidget * mainWidget;
@@ -61,26 +62,48 @@ public:
     QPoint contextPoint;                /*!< 表格右键事件菜单 */
     TaskInfo * cacheTaskInfo;           /*!< 复制的任务信息 */
 
+    QAction *bandAction;
+    QAction *stateAction;
+    QAction *gatherAction;
+    QAction *selfCheckAction;
+    QAction *instrumentAction;
+    QAction *trunTableAction;
+    QAction *playBackAction;
+    QAction *addTaskAction;
+    QAction *delTaskAction;
+    QAction *modifyAction;
+    QAction *copyAction;
+    QAction *pasteAction;
+
     TaskControl * q_ptr;
 };
 
 void TaskControlPrivate::initView()
 {
     mainWidget = new QWidget(q_ptr);
-    m_MissionButton = new QPushButton(QStringLiteral("Distribute task"),mainWidget);
-    QObject::connect(m_MissionButton, SIGNAL(pressed()), q_ptr, SLOT(distributeTask()));
-    m_MissionButton->setMaximumHeight(50);
-    m_MissionButton->setMinimumHeight(35);
-    m_MissionButton->show();
 
-    QGridLayout * m_grdLayout = new QGridLayout(mainWidget);
-    m_grdLayout->addWidget(taskView, 0, 0, 10,10);
-    m_grdLayout->addWidget(m_MissionButton, 10, 4, 1, 2, Qt::AlignVCenter | Qt::AlignVCenter);
-    m_grdLayout->setHorizontalSpacing(10);
-    m_grdLayout->setVerticalSpacing(6);
-    m_grdLayout->setContentsMargins(10, 5, 10, 5);
+    distrbuteButt = new QPushButton(mainWidget);
+    QObject::connect(distrbuteButt, SIGNAL(pressed()), q_ptr, SLOT(distributeTask()));
+    distrbuteButt->setMinimumWidth(120);
+    distrbuteButt->setFixedHeight(26);
 
-    mainWidget->setLayout(m_grdLayout);
+    QWidget * toolWidget = new QWidget;
+    QHBoxLayout * hlayout = new QHBoxLayout;
+    hlayout->setContentsMargins(2,2,2,2);
+    hlayout->addStretch(1);
+    hlayout->addWidget(distrbuteButt);
+    hlayout->addStretch(1);
+    toolWidget->setLayout(hlayout);
+
+    distrbuteButt->show();
+
+    QVBoxLayout * vLayout = new QVBoxLayout(mainWidget);
+    vLayout->addWidget(taskView);
+    vLayout->addWidget(toolWidget);
+    vLayout->setSpacing(6);
+    vLayout->setContentsMargins(5, 5, 5, 0);
+
+    mainWidget->setLayout(vLayout);
 
     QHBoxLayout * layout = new QHBoxLayout;
     layout->setContentsMargins(0,0,0,0);
@@ -91,6 +114,7 @@ void TaskControlPrivate::initView()
 void TaskControlPrivate::initTableView()
 {
     taskView = new TableView(q_ptr);
+    taskView->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
 
     taskViewModel = new TableViewModel;
     taskViewDelegate = new TableViewDelegate(taskView);
@@ -104,75 +128,109 @@ void TaskControlPrivate::initTableView()
 void TaskControlPrivate::initTableViewMenu()
 {
     QMenu *m_AddMenu = new QMenu(q_ptr);
-    QAction *action = new QAction(QObject::tr("Band Control"));
-    action->setProperty(ACTION_TYPE,Type::Band);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    bandAction = new QAction();
+    bandAction->setProperty(ACTION_TYPE,Type::Band);
+    QObject::connect(bandAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(bandAction);
 
-    action = new QAction(QObject::tr("State Control"));
-    action->setProperty(ACTION_TYPE,Type::State);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    stateAction = new QAction();
+    stateAction->setProperty(ACTION_TYPE,Type::State);
+    QObject::connect(stateAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(stateAction);
 
-    action = new QAction(QObject::tr("Gather Control"));
-    action->setProperty(ACTION_TYPE,Type::Gather);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    gatherAction = new QAction();
+    gatherAction->setProperty(ACTION_TYPE,Type::Gather);
+    QObject::connect(gatherAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(gatherAction);
 
-    action = new QAction(QObject::tr("SelfCheck Control"));
-    action->setProperty(ACTION_TYPE,Type::SelfCheck);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    selfCheckAction = new QAction();
+    selfCheckAction->setProperty(ACTION_TYPE,Type::SelfCheck);
+    QObject::connect(selfCheckAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(selfCheckAction);
 
-    action = new QAction(QObject::tr("Instrument Control"));
-    action->setProperty(ACTION_TYPE,Type::Instrument);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    instrumentAction = new QAction();
+    instrumentAction->setProperty(ACTION_TYPE,Type::Instrument);
+    QObject::connect(instrumentAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(instrumentAction);
 
-    action = new QAction(QObject::tr("Turntable Control"));
-    action->setProperty(ACTION_TYPE,Type::Turntable);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    trunTableAction = new QAction();
+    trunTableAction->setProperty(ACTION_TYPE,Type::Turntable);
+    QObject::connect(trunTableAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(trunTableAction);
 
-    action = new QAction(QObject::tr("PlayBack Control"));
-    action->setProperty(ACTION_TYPE,Type::PlayBack);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
-    m_AddMenu->addAction(action);
+    playBackAction = new QAction();
+    playBackAction->setProperty(ACTION_TYPE,Type::PlayBack);
+    QObject::connect(playBackAction, SIGNAL(triggered(bool)), q_ptr, SLOT(addNewTask()));
+    m_AddMenu->addAction(playBackAction);
 
+    addTaskAction = new QAction();
+    addTaskAction->setMenu(m_AddMenu);
+    taskView->addAction(addTaskAction);
 
-    action = new QAction(QObject::tr("Add task"));
-    action->setMenu(m_AddMenu);
-    taskView->addAction(action);
+    delTaskAction = new QAction();
+    delTaskAction->setShortcut(QKeySequence::Delete);
+    QObject::connect(delTaskAction, SIGNAL(triggered(bool)), q_ptr, SLOT(deleteTask()));
+    taskView->addAction(delTaskAction);
 
-    action = new QAction(QObject::tr("Delete task"));
-    action->setShortcut(QKeySequence::Delete);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(deleteTask()));
-    taskView->addAction(action);
+    modifyAction = new QAction();
+    QObject::connect(modifyAction, SIGNAL(triggered(bool)), q_ptr, SLOT(modifyTask()));
+    taskView->addAction(modifyAction);
 
-    action = new QAction(QObject::tr("Modify task"));
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(modifyTask()));
-    taskView->addAction(action);
+    copyAction = new QAction();
+    copyAction->setShortcut(QKeySequence::Copy);
+    QObject::connect(copyAction, SIGNAL(triggered(bool)), q_ptr, SLOT(copyTable()));
+    taskView->addAction(copyAction);
 
-    action = new QAction(QObject::tr("Copy task"));
-    action->setShortcut(QKeySequence::Copy);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(copyTable()));
-    taskView->addAction(action);
-
-    action = new QAction(QObject::tr("Paste task"));
-    action->setShortcut(QKeySequence::Paste);
-    QObject::connect(action, SIGNAL(triggered(bool)), q_ptr, SLOT(pasteTask()));
-    taskView->addAction(action);
+    pasteAction = new QAction();
+    pasteAction->setShortcut(QKeySequence::Paste);
+    QObject::connect(pasteAction, SIGNAL(triggered(bool)), q_ptr, SLOT(pasteTask()));
+    taskView->addAction(pasteAction);
 }
 
 TaskControl::TaskControl(QWidget *parent) :
     QWidget(parent),d_ptr(new TaskControlPrivate(this))
 {
-
+    retranslateUi();
+    RSingleton<Base::Subject>::instance()->attach(this);
 }
 
 TaskControl::~TaskControl()
 {
 
+}
+
+void TaskControl::retranslateUi()
+{
+    Q_D(TaskControl);
+    d->bandAction->setText(QObject::tr("Band Control"));
+    d->stateAction->setText(QObject::tr("State Control"));
+    d->gatherAction->setText(QObject::tr("Gather Control"));
+    d->selfCheckAction->setText(QObject::tr("SelfCheck Control"));
+    d->instrumentAction->setText(QObject::tr("Instrument Control"));
+    d->trunTableAction->setText(QObject::tr("Turntable Control"));
+    d->playBackAction->setText(QObject::tr("PlayBack Control"));
+    d->addTaskAction->setText(QObject::tr("Add task"));
+    d->delTaskAction->setText(QObject::tr("Delete task"));
+    d->modifyAction->setText(QObject::tr("Modify task"));
+    d->copyAction->setText(QObject::tr("Copy task"));
+    d->pasteAction->setText(QObject::tr("Paste task"));
+
+    if(!d->bPendingFlag){
+        d->distrbuteButt->setText(QObject::tr("Distribute task"));
+    }else{
+        d->distrbuteButt->setText(QObject::tr("In process"));
+    }
+}
+
+void TaskControl::onMessage(MessageType::MessageType type)
+{
+    switch(type){
+        case MessageType::MESS_LAN_CHANGED:
+            retranslateUi();
+            break;
+        default:
+            break;
+    }
 }
 
 void TaskControl::timerEvent(QTimerEvent *event)
@@ -301,12 +359,10 @@ void TaskControl::distributeTask()
     
     if (d->bPendingFlag)
     {
-        d->m_MissionButton->setText(QStringLiteral("下发任务"));
         this->killTimer(d->iPendingTimerID);
     }
     else
     {
-        d->m_MissionButton->setText(QStringLiteral("下发中..."));
         d->iPendingTimerID = this->startTimer(2000);
     }
     d->bPendingFlag = !d->bPendingFlag;

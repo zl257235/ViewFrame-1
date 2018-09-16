@@ -1,14 +1,15 @@
 ﻿#include "TableViewModel.h"
 
 #include <QDebug>
+#include "Base/util/rsingleton.h"
 
 namespace TaskControlModel {
 
 TableViewModel::TableViewModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    headInfo<<QObject::tr("Index")<<QObject::tr("Type")<<QObject::tr("Parameter")
-                  <<QObject::tr("Dispatch Time")<<QObject::tr("Execute Time");
+    retranslateUi();
+    RSingleton<Base::Subject>::instance()->attach(this);
 }
 
 TableViewModel::~TableViewModel()
@@ -173,10 +174,29 @@ void TableViewModel::updateTaskList(TaskInfoList &list)
     resetData();
 }
 
+void TableViewModel::onMessage(MessageType::MessageType type)
+{
+    switch(type){
+        case MessageType::MESS_LAN_CHANGED:
+                retranslateUi();
+                resetData();
+        break;
+        default:
+            break;
+    }
+}
+
 void TableViewModel::resetData()
 {
     beginResetModel();
     endResetModel();
+}
+
+void TableViewModel::retranslateUi()
+{
+    headInfo.clear();
+    headInfo<<QObject::tr("Index")<<QObject::tr("Type")<<QObject::tr("Parameter")
+                  <<QObject::tr("Dispatch Time")<<QObject::tr("Execute Time");
 }
 
 } //namespace TaskControlModel

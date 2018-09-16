@@ -1,6 +1,8 @@
 ﻿#include "pluginmanager.h"
 
-#include "../component/rcomponent.h"
+#include "rcomponent.h"
+
+namespace Base{
 
 PluginManager::PluginManager(QObject *parent):
     QObject(parent)
@@ -31,3 +33,5 @@ PluginManager::ComponentMap PluginManager::plugins()
     std::lock_guard<std::mutex> lg(m_mutex);
     return componentMap;
 }
+
+} //namespace Base

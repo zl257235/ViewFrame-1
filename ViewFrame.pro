@@ -7,9 +7,8 @@ SUBDIRS += \
     Network \
     Core
 
-#for ( sub,SUBDIRS){
-#    message($$sub)
-#}
-
 vari = getenv(CONFIG)
 message($$vari)
+
+TRANSLATIONS += $${TARGET}_zh_CN.ts
+TRANSLATIONS += $${TARGET}_en_US.ts

@@ -13,7 +13,7 @@
 #define AUTOTRANSACTION_H
 
 #include <QSqlDatabase>
-#include "../base_global.h"
+#include "../../base_global.h"
 
 #define BeginTransaction(database) AutoTransaction autoT(database)
 #define RollBackTransaction (autoT(true))

@@ -33,6 +33,7 @@ HEADERS += \
     pluginmanager/observer.h \
     pluginmanager/pluginmanager.h \
     pluginmanager/subject.h \
+    pluginmanager/rcomponent.h \
     actionmanager/action.h \
     actionmanager/actioncontainer.h \
     actionmanager/actionmanager.h \
@@ -40,7 +41,6 @@ HEADERS += \
     actionmanager/id.h \
     base_global.h \
     messagetype.h \
-    component/rcomponent.h \
     util/fileutils.h \
     util/rbuffer.h \
     util/regexp.h \
@@ -50,24 +50,26 @@ HEADERS += \
     util/scaleswitcher.h \
     selfwidget/dialogproxy.h \
     selfwidget/rbutton.h \
-    sql/autotransaction.h \
-    sql/database.h \
-    sql/databasemanager.h \
-    sql/datatable.h \
-    sql/rpersistence.h \
+    common/sql/autotransaction.h \
+    common/sql/database.h \
+    common/sql/databasemanager.h \
+    common/sql/datatable.h \
+    common/sql/rpersistence.h \
     protocol/datastruct.h \
-    constants.h
+    constants.h \
+    common/stylemanager.h \
+    common/languagemanager.h
 
 SOURCES += \
     pluginmanager/observer.cpp \
     pluginmanager/pluginmanager.cpp \
     pluginmanager/subject.cpp \
+    pluginmanager/rcomponent.cpp \
     actionmanager/action.cpp \
     actionmanager/actioncontainer.cpp \
     actionmanager/actionmanager.cpp \
     actionmanager/command.cpp \
     actionmanager/id.cpp \
-    component/rcomponent.cpp \
     util/fileutils.cpp \
     util/rbuffer.cpp \
     util/regexp.cpp \
@@ -77,9 +79,11 @@ SOURCES += \
     util/scaleswitcher.cpp \
     selfwidget/dialogproxy.cpp \
     selfwidget/rbutton.cpp \
-    sql/autotransaction.cpp \
-    sql/database.cpp \
-    sql/databasemanager.cpp \
-    sql/datatable.cpp \
-    sql/rpersistence.cpp \
-    protocol/datastruct.cpp
+    protocol/datastruct.cpp \
+    common/sql/autotransaction.cpp \
+    common/sql/database.cpp \
+    common/sql/databasemanager.cpp \
+    common/sql/datatable.cpp \
+    common/sql/rpersistence.cpp \
+    common/stylemanager.cpp \
+    common/languagemanager.cpp

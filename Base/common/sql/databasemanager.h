@@ -16,8 +16,8 @@
 #include <QList>
 
 #include "database.h"
-#include "../protocol/datastruct.h"
-#include "../base_global.h"
+#include "../../protocol/datastruct.h"
+#include "../../base_global.h"
 
 class BASESHARED_EXPORT SupportedDB
 {

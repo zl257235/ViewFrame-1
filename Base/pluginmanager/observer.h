@@ -15,6 +15,8 @@
 #include "../messagetype.h"
 #include "../base_global.h"
 
+namespace Base{
+
 class BASESHARED_EXPORT Observer
 {
 public:
@@ -23,5 +25,7 @@ public:
 
     virtual void onMessage(MessageType::MessageType type) = 0;
 };
+
+} //namespace Base
 
 #endif // OBSERVER_H

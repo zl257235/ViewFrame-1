@@ -14,8 +14,8 @@
 #include <QString>
 #include <QSqlDatabase>
 
-#include "../protocol/datastruct.h"
-#include "../base_global.h"
+#include "../../protocol/datastruct.h"
+#include "../../base_global.h"
 
 class BASESHARED_EXPORT Database
 {

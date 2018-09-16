@@ -3,13 +3,14 @@
 #include <QApplication>
 #include <QTextCodec>
 #include <QFile>
-#include <QTranslator>
 #include <QMessageBox>
+#include <QDebug>
 
 #include "Base/util/rutil.h"
 #include "Base/util/rlog.h"
 #include "Base/util/rsingleton.h"
 #include "Base/constants.h"
+#include "Base/common/languagemanager.h"
 #include "global.h"
 #include "file/globalconfigfile.h"
 
@@ -50,41 +51,10 @@ int main(int argc, char *argv[])
         QMessageBox::warning(NULL,QObject::tr("Warning"),QObject::tr("Log module initialization failure!"),QMessageBox::Yes,QMessageBox::Yes);
     }
 
-    //语言
-    QTranslator translator;
-
     QString translationPath = configFullPath + QString(Constant::CONFIG_LocalePath);
-    if(RUtil::createDir(translationPath))
-    {
-        QStringList uiLanguages;
-
-#if (QT_VERSION >= 0x040801) || (QT_VERSION >= 0x040800 && !defined(Q_OS_WIN))
-        uiLanguages = QLocale::system().uiLanguages();
-#endif
-
-        foreach(QString locale, uiLanguages)
-        {
-#if (QT_VERSION >= 0x050000)
-            locale = QLocale(locale).name();
-#else
-            locale.replace(QLatin1Char('-'), QLatin1Char('_'));
-#endif
-            if(translator.load(QString(Constant::ApplicationName)+"_"+ locale,translationPath))
-            {
-                a.installTranslator(&translator);
-                a.setProperty("rimLocale", locale);
-                break;
-            }
-        }
+    if(RUtil::createDir(translationPath)){
+        RSingleton<Base::LanguageManager>::instance()->loadTranslator(translationPath);
     }
-
-    //样式
-    QFile blackStyleFile(":/resource/style/Black.qss");
-    if(!blackStyleFile.open(QFile::ReadOnly)){
-        RLOG_ERROR("style file read error!");
-        return -1;
-    }
-    a.setStyleSheet(blackStyleFile.readAll());
 
     MainWindow w;
     w.show();

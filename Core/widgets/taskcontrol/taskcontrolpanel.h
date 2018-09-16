@@ -11,7 +11,9 @@
 #ifndef TASKCONTROLPANEL_H
 #define TASKCONTROLPANEL_H
 
-#include "Base/component/rcomponent.h"
+#include "Base/pluginmanager/rcomponent.h"
+
+using namespace Base;
 
 namespace TaskControlModel {
 
@@ -30,6 +32,9 @@ public:
     void onMessage(MessageType::MessageType type);
 
     QSize sizeHint()const;
+
+private:
+    void retranslateUi();
 
 private:
     TaskControl * controlWidget;

@@ -5,12 +5,13 @@
 #include <QSharedPointer>
 
 #include "../task.h"
+#include "Base/pluginmanager/observer.h"
 
 namespace TaskControlModel {
 
 struct Task;
 
-class TableViewModel : public QAbstractTableModel
+class TableViewModel : public QAbstractTableModel , public Base::Observer
 {
     Q_OBJECT
 public:
@@ -26,6 +27,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
     void updateTaskList(TaskInfoList & list);
+
+    void onMessage(MessageType::MessageType type);
   
 public:
     enum ColumnType
@@ -39,6 +42,7 @@ public:
 
 private:
     void resetData();
+    void retranslateUi();
     
 private:
     QStringList headInfo;

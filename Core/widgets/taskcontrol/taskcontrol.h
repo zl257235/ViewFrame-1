@@ -6,6 +6,7 @@
 #include <QWidget>
 
 #include "head.h"
+#include "Base/pluginmanager/observer.h"
 
 class QTimerEvent;
 
@@ -14,13 +15,16 @@ namespace TaskControlModel {
 class TaskControlPrivate;
 
 
-class TaskControl : public QWidget
+class TaskControl : public QWidget , public Base::Observer
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(TaskControl)
 public:
     explicit TaskControl(QWidget *parent = 0);
     ~TaskControl();
+
+    void retranslateUi();
+    void onMessage(MessageType::MessageType type);
     
 private slots:
     void viewTask(QModelIndex); /*!< 查看任务信息 */
