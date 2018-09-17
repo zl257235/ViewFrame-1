@@ -2,5 +2,49 @@
     <qresource prefix="/">
         <file>resource/style/Black.qss</file>
         <file>resource/style/White.qss</file>
+        <file>resource/style/Technology.qss</file>
+    </qresource>
+    <qresource prefix="/tech">
+        <file>resource/technology/background.png</file>
+        <file>resource/technology/branch_closed.png</file>
+        <file>resource/technology/branch_closed-on.png</file>
+        <file>resource/technology/branch_open.png</file>
+        <file>resource/technology/branch_open-on.png</file>
+        <file>resource/technology/checkbox_checked.png</file>
+        <file>resource/technology/checkbox_checked_disabled.png</file>
+        <file>resource/technology/checkbox_checked_focus.png</file>
+        <file>resource/technology/checkbox_indeterminate.png</file>
+        <file>resource/technology/checkbox_indeterminate_disabled.png</file>
+        <file>resource/technology/checkbox_indeterminate_focus.png</file>
+        <file>resource/technology/checkbox_unchecked.png</file>
+        <file>resource/technology/checkbox_unchecked_disabled.png</file>
+        <file>resource/technology/checkbox_unchecked_focus.png</file>
+        <file>resource/technology/close.png</file>
+        <file>resource/technology/close-hover.png</file>
+        <file>resource/technology/close-pressed.png</file>
+        <file>resource/technology/down_arrow.png</file>
+        <file>resource/technology/down_arrow_disabled.png</file>
+        <file>resource/technology/Hmovetoolbar.png</file>
+        <file>resource/technology/Hsepartoolbar.png</file>
+        <file>resource/technology/left_arrow.png</file>
+        <file>resource/technology/left_arrow_disabled.png</file>
+        <file>resource/technology/radio_checked.png</file>
+        <file>resource/technology/radio_checked_disabled.png</file>
+        <file>resource/technology/radio_checked_focus.png</file>
+        <file>resource/technology/radio_unchecked.png</file>
+        <file>resource/technology/radio_unchecked_disabled.png</file>
+        <file>resource/technology/radio_unchecked_focus.png</file>
+        <file>resource/technology/right_arrow.png</file>
+        <file>resource/technology/right_arrow_disabled.png</file>
+        <file>resource/technology/sizegrip.png</file>
+        <file>resource/technology/stylesheet-branch-end.png</file>
+        <file>resource/technology/stylesheet-branch-more.png</file>
+        <file>resource/technology/stylesheet-vline.png</file>
+        <file>resource/technology/transparent.png</file>
+        <file>resource/technology/undock.png</file>
+        <file>resource/technology/up_arrow.png</file>
+        <file>resource/technology/up_arrow_disabled.png</file>
+        <file>resource/technology/Vmovetoolbar.png</file>
+        <file>resource/technology/Vsepartoolbar.png</file>
     </qresource>
 </RCC>

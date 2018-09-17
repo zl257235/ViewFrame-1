@@ -94,6 +94,7 @@ DialogProxy::DialogProxy(QWidget *parent):QDialog(parent),
 {
     Qt::WindowFlags  flags = Qt::Dialog;
     flags |= Qt::WindowCloseButtonHint;
+    flags |=  Qt::FramelessWindowHint;
     setWindowFlags(flags);
 
 }

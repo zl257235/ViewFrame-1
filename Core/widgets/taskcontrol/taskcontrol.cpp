@@ -101,7 +101,7 @@ void TaskControlPrivate::initView()
     vLayout->addWidget(taskView);
     vLayout->addWidget(toolWidget);
     vLayout->setSpacing(6);
-    vLayout->setContentsMargins(5, 5, 5, 0);
+    vLayout->setContentsMargins(0, 0, 0, 0);
 
     mainWidget->setLayout(vLayout);
 

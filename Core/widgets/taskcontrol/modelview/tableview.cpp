@@ -30,7 +30,8 @@ TableView::TableView(QWidget *parent) : QTableView(parent),
     verticalHeader()->setVisible(false);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     horizontalHeader()->setHighlightSections(false);
-    
+    setAlternatingRowColors(true);
+
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::SingleSelection);
     

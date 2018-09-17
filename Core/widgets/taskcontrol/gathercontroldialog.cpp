@@ -1,6 +1,8 @@
 ﻿#include "gathercontroldialog.h"
 #include "ui_gathercontroldialog.h"
 
+#include <QListView>
+
 namespace TaskControlModel {
 
 class GatherControlDialogPrivate
@@ -26,6 +28,11 @@ void GatherControlDialogPrivate::initView()
     mainWidget = new QWidget();
     ui =  new Ui::GatherControlDialog;
     ui->setupUi(mainWidget);
+
+    ui->cbox_GatherWay->setView(new QListView());
+    ui->cbox_GatherType->setView(new QListView());
+    ui->cbox_SendingPause->setView(new QListView());
+
 }
 
 GatherControlDialog::GatherControlDialog(QWidget *parent):

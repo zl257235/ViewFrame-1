@@ -15,6 +15,7 @@
 #include "Base/common/languagemanager.h"
 #include "Base/pluginmanager/subject.h"
 #include "Base/util/rlog.h"
+#include "healthmanage/healthinfopannel.h"
 
 #include "widgets/taskcontrol/taskcontrolpanel.h"
 
@@ -27,10 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     setWindowTitle(tr("ViewFrame"));
-    showMaximized();
 
     //TODO 20180915 待添加对配置路径下文件搜索
-    RSingleton<StyleManager>::instance()->addStyle(CustomStyle(tr("Dark style"),":/resource/style/Black.qss",true));
+    RSingleton<StyleManager>::instance()->addStyle(CustomStyle(tr("Technology style"),":/resource/style/Technology.qss",true));
+    RSingleton<StyleManager>::instance()->addStyle(CustomStyle(tr("Dark style"),":/resource/style/Black.qss",false));
     RSingleton<StyleManager>::instance()->addStyle(CustomStyle(tr("Light style"),":/resource/style/White.qss",false));
 
     RSingleton<Subject>::instance()->attach(this);
@@ -39,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     initComponent();
 
     updateLanguage(curLanguageName);
+
+    showMaximized();
 }
 
 MainWindow::~MainWindow()
@@ -275,12 +278,13 @@ void MainWindow::initComponent()
 
     //TODO 20180824 待从各个dll中读取
     TaskControlModel::TaskControlPanel * taskControl = new TaskControlModel::TaskControlPanel;
+    HealthInfoDockPanel *healthControl = new HealthInfoDockPanel;
 
     addDockWidget(Qt::LeftDockWidgetArea,taskControl);
-
-//    addDockWidget(Qt::RightDockWidgetArea,connectionPanel);
+    addDockWidget(Qt::RightDockWidgetArea,healthControl);
 
     RSingleton<PluginManager>::instance()->addPlugin(taskControl);
+    RSingleton<PluginManager>::instance()->addPlugin(healthControl);
 
     RSingleton<PluginManager>::instance()->load();
     PluginManager::ComponentMap maps = RSingleton<PluginManager>::instance()->plugins();

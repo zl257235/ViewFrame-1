@@ -14,7 +14,6 @@ namespace TaskControlModel {
 
 class TaskControlPrivate;
 
-
 class TaskControl : public QWidget , public Base::Observer
 {
     Q_OBJECT

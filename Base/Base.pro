@@ -1,5 +1,5 @@
 QT       += core widgets xml
-QT       += sql
+QT       += sql axcontainer
 
 CONFIG += c++11
 
@@ -58,7 +58,8 @@ HEADERS += \
     protocol/datastruct.h \
     constants.h \
     common/stylemanager.h \
-    common/languagemanager.h
+    common/languagemanager.h \
+    selfwidget/pageinfo.h
 
 SOURCES += \
     pluginmanager/observer.cpp \
@@ -86,4 +87,5 @@ SOURCES += \
     common/sql/datatable.cpp \
     common/sql/rpersistence.cpp \
     common/stylemanager.cpp \
-    common/languagemanager.cpp
+    common/languagemanager.cpp \
+    selfwidget/pageinfo.cpp

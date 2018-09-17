@@ -62,7 +62,6 @@ void LanguageManager::loadTranslator(QString filePath)
         if(result.size() == 3){
             Language la(fileName,result.at(2));
             if(fileName.contains(locale.name())){
-                qDebug()<<fileName<<"_"<<locale.name();
                 la.setSelected(true);
             }
             d->lanlist.push_back(la);

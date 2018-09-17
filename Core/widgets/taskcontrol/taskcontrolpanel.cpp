@@ -21,6 +21,7 @@ TaskControlPanel::~TaskControlPanel()
 bool TaskControlPanel::initialize()
 {
     controlWidget = new TaskControl(this);
+    controlWidget->setObjectName("Panel_Container");
     setWidget(controlWidget);
 
     return true;
