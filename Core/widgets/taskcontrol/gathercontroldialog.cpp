@@ -1,7 +1,9 @@
 ﻿#include "gathercontroldialog.h"
 #include "ui_gathercontroldialog.h"
 
+#include <QMessageBox>
 #include <QListView>
+#include "Base/common/validator/rcombinevalidator.h"
 
 namespace TaskControlModel {
 
@@ -9,7 +11,7 @@ class GatherControlDialogPrivate
 {
     Q_DECLARE_PUBLIC(GatherControlDialog)
 private:
-    GatherControlDialogPrivate(GatherControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton){
+    GatherControlDialogPrivate(GatherControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton),modifyInfo(NULL){
         initView();
     }
 
@@ -21,6 +23,8 @@ private:
     DialogProxy::StandardButton clickedButt;
 
     Ui::GatherControlDialog *ui;
+
+    GatherControl * modifyInfo;
 };
 
 void GatherControlDialogPrivate::initView()
@@ -41,20 +45,6 @@ GatherControlDialog::GatherControlDialog(QWidget *parent):
     setButton(DialogProxy::Ok|DialogProxy::Cancel);
     setContentWidget(d_ptr->mainWidget);
     setWindowTitle(tr("Gather control"));
-    
-//    QRegExp reint("^(-[0-9]\\d*|[0-9]\\d*)?$");  //整数类型
-//    QRegExpValidator *Validator_int = new QRegExpValidator(reint, this);
-//    ui->le_ImpulseNumber->setValidator(Validator_int);
-    
-//    QRegExp rx("^((-[0-9]\\d*|[0-9]\\d*)\\.?)?([0-9]){5}$");  //浮点类型 可输入小数点后五位
-//    QRegExpValidator *m_Validator = new QRegExpValidator(rx, this);
-//    ui->le_Time->setValidator(m_Validator);
-//    ui->le_FrequencyMin->setValidator(m_Validator);
-//    ui->le_FrequencyMax->setValidator(m_Validator);
-//    ui->le_PulseyMin->setValidator(m_Validator);
-//    ui->le_PulseyMax->setValidator(m_Validator);
-//    ui->le_PowerMin->setValidator(m_Validator);
-//    ui->le_PowerMax->setValidator(m_Validator);
 }
 
 GatherControlDialog::~GatherControlDialog()
@@ -64,7 +54,7 @@ GatherControlDialog::~GatherControlDialog()
 
 QSize GatherControlDialog::sizeHint() const
 {
-    return QSize(615,410);
+    return QSize(615,450);
 }
 
 void GatherControlDialog::respButtClicked(DialogProxy::StandardButton butt)
@@ -90,46 +80,38 @@ void GatherControlDialog::respOk()
 
 void GatherControlDialog::respCancel()
 {
+    Q_D(GatherControlDialog);
+    RAndCombineValidator validator;
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_Time->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<int>(d->ui->le_ImpulseNumber->text().toInt(),RValid::Ge,0,RValid::Le,1000000));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_FrequencyMin->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_FrequencyMax->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_PulseyMin->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_PulseyMax->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_PowerMin->text().toFloat(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<float>(d->ui->le_PowerMax->text().toFloat(),RValid::Ge,0));
+
+    if(validator.validate() == RValid::Invalid){
+        QMessageBox::warning(this,tr("warning"),tr("Input information validation failed!"),QMessageBox::Yes);
+        return;
+    }
+
     close();
 }
 
 void GatherControlDialog::setWindowData(GatherControl * gather)
 {
     Q_D(GatherControlDialog);
+    d->modifyInfo = gather;
     //方式
-    if (gather->gatherWay == 0)
-        d->ui->cbox_GatherWay->setCurrentIndex(0);
-    else
-        d->ui->cbox_GatherWay->setCurrentIndex(1);
-    
+    d->ui->cbox_GatherWay->setCurrentIndex(static_cast<int>(gather->gatherWay));
     //类型
-    if (gather->gatherType == 0)
-        d->ui->cbox_GatherType->setCurrentIndex(0);
-    else if (gather->gatherType == 1)
-        d->ui->cbox_GatherType->setCurrentIndex(1);
-    else
-        d->ui->cbox_GatherType->setCurrentIndex(2);
-    
+    d->ui->cbox_GatherType->setCurrentIndex(static_cast<int>(gather->gatherType));
     //采集指令
-    if (gather->sendingPause== 0)
-        d->ui->cbox_SendingPause->setCurrentIndex(0);
-    else if (gather->sendingPause == 1)
-        d->ui->cbox_SendingPause->setCurrentIndex(1);
-    else if (gather->sendingPause == 2)
-        d->ui->cbox_SendingPause->setCurrentIndex(2);
-    else if (gather->sendingPause == 3)
-        d->ui->cbox_SendingPause->setCurrentIndex(3);
-    else if (gather->sendingPause == 4)
-        d->ui->cbox_SendingPause->setCurrentIndex(4);
-    else
-        d->ui->cbox_SendingPause->setCurrentIndex(5);
-    
+    d->ui->cbox_SendingPause->setCurrentIndex(static_cast<int>(gather->sendingPause));
     //抽取开关
-    if (gather->extractSwitch)
-        d->ui->check_ExtractSwitch->setChecked(true);
-    else
-        d->ui->check_ExtractSwitch->setChecked(false);
-    
+    d->ui->check_ExtractSwitch->setChecked(gather->extractSwitch);
+
     //采集时长
     d->ui->le_Time->setText(QString("%1").arg(gather->gatherTime));
     //采集脉冲个数
@@ -169,11 +151,13 @@ void GatherControlDialog::setWindowData(GatherControl * gather)
 GatherControl * GatherControlDialog::getWindowData()
 {
     Q_D(GatherControlDialog);
-//    if (d->ui->le_originFrequency->text() == NULL || d->ui->le_stopFrequency->text() == NULL ||
-//            d->ui->le_frequencyStopping->text() == NULL)
-//        return;
     if(d->clickedButt == DialogProxy::Ok){
-        GatherControl * gather = new GatherControl;
+        GatherControl * gather = NULL;
+        if(d->modifyInfo)
+            gather = d->modifyInfo;
+        else
+            gather = new GatherControl;
+
         gather->excuteTime = QDateTime::currentDateTime();
         gather->lastTime = 1;
         int temp_I = -1;

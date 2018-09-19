@@ -18,6 +18,10 @@
 #define LABEL_MIN_WIDTH 120
 #define LABEL_MIN_HEIGHT 25
 
+//编辑框、combobox的固定大小
+#define LINEDIT_FIXED_WIDTH 173
+#define LINEDIT_FIXED_HEIGHT 25
+
 namespace TaskControlModel {
 
 /**

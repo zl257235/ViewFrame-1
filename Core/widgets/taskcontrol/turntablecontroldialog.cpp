@@ -6,6 +6,9 @@
 #include <QCheckBox>
 #include <QListView>
 #include <QGridLayout>
+#include <QMessageBox>
+
+#include "Base/common/validator/rcombinevalidator.h"
 
 namespace TaskControlModel {
 
@@ -13,7 +16,7 @@ class TurntableControlDialogPrivate
 {
     Q_DECLARE_PUBLIC(TurntableControlDialog)
 private:
-    TurntableControlDialogPrivate(TurntableControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton){
+    TurntableControlDialogPrivate(TurntableControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton),modifyInfo(NULL){
         initView();
     }
 
@@ -29,6 +32,8 @@ private:
     QComboBox * type_cbox;
     QComboBox * directionRotation_cbox;
     QCheckBox * zeroPosSetting_check;
+
+    TurntableControl * modifyInfo;
 };
 
 void TurntableControlDialogPrivate::initView()
@@ -41,7 +46,7 @@ void TurntableControlDialogPrivate::initView()
     //类型
     QLabel * label_2 = new QLabel(mainWidget);
     label_2->setText(QObject::tr("Type"));
-    label_2->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_2->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_2->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
     gridLayout->addWidget(label_2, 0, 0, 1, 1);
@@ -49,7 +54,7 @@ void TurntableControlDialogPrivate::initView()
     type_cbox = new QComboBox(mainWidget);
     type_cbox->setView(new QListView());
     type_cbox->setObjectName(QStringLiteral("type_cbox"));
-    type_cbox->setMinimumSize(QSize(150, 25));
+    type_cbox->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     type_cbox->addItem(QObject::tr("Type 1"));
     type_cbox->addItem(QObject::tr("Type 2"));
 
@@ -58,41 +63,38 @@ void TurntableControlDialogPrivate::initView()
     //转台位置
     QLabel * label_3 = new QLabel(mainWidget);
     label_3->setText(QObject::tr("Position"));
-    label_3->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_3->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_3->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 
     gridLayout->addWidget(label_3, 1, 0, 1, 1);
 
     positionEdit = new QLineEdit(mainWidget);
-    positionEdit->setMinimumSize(QSize(150, 25));
-    positionEdit->setMaximumSize(QSize(999, 30));
+    positionEdit->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(positionEdit, 1, 1, 1, 1);
 
     //转台速度
     QLabel * label_4 = new QLabel(q_ptr);
     label_4->setText(QObject::tr("Speed"));
     label_4->setObjectName(QStringLiteral("label_4"));
-    label_4->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_4->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_4->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_4, 2, 0, 1, 1);
 
     speedEdit = new QLineEdit(mainWidget);
-    speedEdit->setMinimumSize(QSize(150, 25));
-    speedEdit->setMaximumSize(QSize(999, 30));
+    speedEdit->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(speedEdit, 2, 1, 1, 1);
 
     //转台方向
     QLabel * label_5 = new QLabel(mainWidget);
     label_5->setText(QObject::tr("Direction"));
-    label_5->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_5->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_5->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
     gridLayout->addWidget(label_5, 3, 0, 1, 1);
 
     directionRotation_cbox = new QComboBox(mainWidget);
     directionRotation_cbox->setView(new QListView());
-    directionRotation_cbox->setMinimumSize(QSize(150, 25));
-    directionRotation_cbox->setMaximumSize(QSize(999, 30));
+    directionRotation_cbox->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     directionRotation_cbox->addItem(QObject::tr("Clockwise"));
     directionRotation_cbox->addItem(QObject::tr("Anti-clockwise"));
 
@@ -101,14 +103,13 @@ void TurntableControlDialogPrivate::initView()
     //零位设置
     QLabel * label_6 = new QLabel(mainWidget);
     label_6->setText(QObject::tr("Zero setting"));
-    label_6->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_6->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_6->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
     gridLayout->addWidget(label_6, 4, 0, 1, 1);
 
     zeroPosSetting_check = new QCheckBox(mainWidget);
-    zeroPosSetting_check->setMinimumSize(QSize(150, 25));
-    zeroPosSetting_check->setMaximumSize(QSize(999, 30));
+    zeroPosSetting_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
 
     gridLayout->addWidget(zeroPosSetting_check, 4, 1, 1, 1);
 
@@ -121,11 +122,6 @@ TurntableControlDialog::TurntableControlDialog(QWidget *parent)
     setButton(DialogProxy::Ok|DialogProxy::Cancel);
     setContentWidget(d_ptr->mainWidget);
     setWindowTitle(tr("Turning table control"));
-    
-    QRegExp refloat("^((-[0-9]\\d*|[0-9]\\d*)\\.?)?([0-9]){5}$");  //浮点类型 可输入小数点后五位
-    QRegExpValidator *Validator_float = new QRegExpValidator(refloat, this);
-//    ui->position_le->setValidator(Validator_float);
-//    ui->speed_le->setValidator(Validator_float);
 }
 
 TurntableControlDialog::~TurntableControlDialog()
@@ -136,6 +132,7 @@ TurntableControlDialog::~TurntableControlDialog()
 void TurntableControlDialog::setWindowData(TurntableControl * turntable)
 {
     Q_D(TurntableControlDialog);
+    d->modifyInfo = turntable;
     d->type_cbox->setCurrentIndex(turntable->type);
     d->positionEdit->setText(QString("%1").arg(turntable->position));
     d->speedEdit->setText(QString("%1").arg(turntable->speed));
@@ -148,7 +145,11 @@ TurntableControl *TurntableControlDialog::getWindowData()
 {
     Q_D(TurntableControlDialog);
     if(d->clickedButt == DialogProxy::Ok){
-        TurntableControl * turntable = new TurntableControl;
+        TurntableControl * turntable = NULL;
+        if(d->modifyInfo)
+            turntable = d->modifyInfo;
+        else
+            turntable = new TurntableControl;
         turntable->excuteTime = QDateTime::currentDateTime();
         turntable->lastTime = 1;
 
@@ -188,6 +189,15 @@ void TurntableControlDialog::respButtClicked(DialogProxy::StandardButton butt)
 
 void TurntableControlDialog::respOk()
 {
+    Q_D(TurntableControlDialog);
+    RAndCombineValidator validator;
+    validator.addValidator(new RNumericValidator<double>(d->positionEdit->text().toDouble(),RValid::Ge,0,RValid::Le,360));
+    validator.addValidator(new RNumericValidator<double>(d->speedEdit->text().toDouble(),RValid::Ge,0));
+
+    if(validator.validate() == RValid::Invalid){
+        QMessageBox::warning(this,tr("warning"),tr("Input information validation failed!"),QMessageBox::Yes);
+        return;
+    }
     respCancel();
 }
 

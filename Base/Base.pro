@@ -59,7 +59,9 @@ HEADERS += \
     constants.h \
     common/stylemanager.h \
     common/languagemanager.h \
-    selfwidget/pageinfo.h
+    selfwidget/pageinfo.h \
+    common/validator/rvalidator.h \
+    common/validator/rcombinevalidator.h
 
 SOURCES += \
     pluginmanager/observer.cpp \
@@ -88,4 +90,6 @@ SOURCES += \
     common/sql/rpersistence.cpp \
     common/stylemanager.cpp \
     common/languagemanager.cpp \
-    selfwidget/pageinfo.cpp
+    selfwidget/pageinfo.cpp \
+    common/validator/rvalidator.cpp \
+    common/validator/rcombinevalidator.cpp

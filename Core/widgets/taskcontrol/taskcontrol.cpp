@@ -409,6 +409,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 BandControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<BandControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::State:
@@ -416,6 +417,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 StateControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<StateControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::Gather:
@@ -423,6 +425,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 GatherControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<GatherControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::SelfCheck:
@@ -430,6 +433,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 SelfCheckControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<SelfCheckControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::Instrument:
@@ -437,6 +441,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 InstrumentControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<InstrumentControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::Turntable:
@@ -444,6 +449,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 TurntableControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<TurntableControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         case Type::PlayBack:
@@ -451,6 +457,7 @@ void TaskControl::showEditWindow(QModelIndex index)
                 PlayBackControlDialog dialog(this);
                 dialog.setWindowData(dynamic_cast<PlayBackControl *>(d->taskInfoList.at(index.row())));
                 dialog.exec();
+                dialog.getWindowData();
             }
             break;
         default:
@@ -467,7 +474,6 @@ void TaskControl::showEditWindow(QModelIndex index)
  */
 void TaskControl::viewTask(QModelIndex index)
 {
-    Q_D(TaskControl);
     showEditWindow(index);
 }
 
@@ -500,7 +506,6 @@ void TaskControl::deleteTask()
  */
 void TaskControl::modifyTask()
 {
-    Q_D(TaskControl);
     bool flag = false;
     QModelIndex index = currentIndex(flag);
     if(flag){
@@ -619,27 +624,6 @@ void TaskControl::copyTable()
 void TaskControl::pasteTask()
 {
     Q_D(TaskControl);
-}
-
-Type TaskControl::selectType(QModelIndex index)
-{
-    QString type = index.model()->index(index.row(), 1).data().toString();
-    
-    if (type.contains(QStringLiteral("频段控制"), Qt::CaseSensitive)) {
-        return Type::Band;
-    } else if (type.contains(QStringLiteral("状态控制"), Qt::CaseSensitive)) {
-        return Type::State;
-    } else if (type.contains(QStringLiteral("采集控制"), Qt::CaseSensitive)) {
-        return Type::Gather;
-    } else if (type.contains(QStringLiteral("自检控制"), Qt::CaseSensitive)) {
-        return Type::SelfCheck;
-    } else if (type.contains(QStringLiteral("仪器控制"), Qt::CaseSensitive)) {
-        return Type::Instrument;
-    } else if (type.contains(QStringLiteral("转台控制"), Qt::CaseSensitive)) {
-        return Type::Turntable;
-    } else if (type.contains(QStringLiteral("回放控制"), Qt::CaseSensitive)) {
-        return Type::PlayBack;
-    }
 }
 
 } //namespace TaskControlModel

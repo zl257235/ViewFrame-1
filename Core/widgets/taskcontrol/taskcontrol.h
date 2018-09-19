@@ -40,7 +40,6 @@ private slots:
     virtual void timerEvent(QTimerEvent *event);
     
 private:
-    Type selectType(QModelIndex);
     void initNetWork();
     QModelIndex currentIndex(bool &validIndex);
     void showEditWindow(QModelIndex index);

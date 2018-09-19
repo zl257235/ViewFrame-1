@@ -6,6 +6,9 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QMessageBox>
+
+#include "Base/common/validator/rcombinevalidator.h"
 
 namespace TaskControlModel {
 
@@ -13,7 +16,7 @@ class InstrumentControlDialogPrivate
 {
     Q_DECLARE_PUBLIC(InstrumentControlDialog)
 private:
-    InstrumentControlDialogPrivate(InstrumentControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton){
+    InstrumentControlDialogPrivate(InstrumentControlDialog * q):q_ptr(q),clickedButt(DialogProxy::NoButton),modifyInfo(NULL){
         initView();
     }
 
@@ -53,6 +56,8 @@ private:
 
     QCheckBox * immediatePowerCalibration_check;    /*!< 功率立即校准 */
     QCheckBox * intrapulseSwitchControl_check;      /*!< 脉内调制开关 */
+
+    InstrumentControl * modifyInfo;
 };
 
 void InstrumentControlDialogPrivate::initView()
@@ -64,13 +69,13 @@ void InstrumentControlDialogPrivate::initView()
     //仪器类型
     QLabel * label_65 = new QLabel(mainWidget);
     label_65->setText(QStringLiteral("仪器类型"));
-    label_65->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_65->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_65->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_65, 0, 0, 1, 1);
 
     type_cbox = new QComboBox(mainWidget);
     type_cbox->setView(new QListView());
-    type_cbox->setMaximumSize(QSize(250, 16777215));
+    type_cbox->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     QStringList typeList;
     typeList<<QStringLiteral("信号源")<<QStringLiteral("频谱仪");
     type_cbox->addItems(typeList);
@@ -79,13 +84,13 @@ void InstrumentControlDialogPrivate::initView()
     //仪器型号
     QLabel * label_58 = new QLabel(mainWidget);
     label_58->setText(QStringLiteral("仪器型号"));
-    label_58->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_58->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_58->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_58, 0, 2, 1, 1);
 
     model_cbox = new QComboBox(mainWidget);
     model_cbox->setView(new QListView());
-    model_cbox->setMaximumSize(QSize(250, 16777215));
+    model_cbox->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     QStringList modelList;
     modelList<<QStringLiteral("安捷伦")<<QStringLiteral("安立")<<QStringLiteral("罗德斯瓦兹");
     model_cbox->addItems(modelList);
@@ -94,13 +99,13 @@ void InstrumentControlDialogPrivate::initView()
     //仪器通信类型
     QLabel *label_57 = new QLabel(mainWidget);
     label_57->setText(QStringLiteral("仪器通信类型"));
-    label_57->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_57->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_57->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_57, 0, 4, 1, 1);
 
     commType_cbox = new QComboBox(mainWidget);
     commType_cbox->setView(new QListView());
-    commType_cbox->setMaximumSize(QSize(250, 16777215));
+    commType_cbox->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     QStringList commList;
     commList<<QStringLiteral("网络")<<QStringLiteral("GPIB");
     commType_cbox->addItems(commList);
@@ -109,221 +114,221 @@ void InstrumentControlDialogPrivate::initView()
     //仪器IP地址
     QLabel * label_64 = new QLabel(mainWidget);
     label_64->setText(QStringLiteral("仪器IP地址"));
-    label_64->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_64->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_64->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_64, 1, 0, 1, 1);
 
     ipAddress_le = new QLineEdit(mainWidget);
-    ipAddress_le->setMaximumSize(QSize(250, 16777215));
+    ipAddress_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(ipAddress_le, 1, 1, 1, 1);
 
     //网络端口
     QLabel * label_51 = new QLabel(mainWidget);
     label_51->setText(QStringLiteral("网络端口"));
-    label_51->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_51->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_51->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_51, 1, 2, 1, 1);
 
     networkPort_le = new QLineEdit(mainWidget);
-    networkPort_le->setMaximumSize(QSize(250, 16777215));
+    networkPort_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(networkPort_le, 1, 3, 1, 1);
 
     //GPIB端口
     QLabel * label_50 = new QLabel(mainWidget);
     label_50->setText(QStringLiteral("GPIB端口"));
-    label_50->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_50->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_50->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_50, 1, 4, 1, 1);
 
     GPIBPort_le = new QLineEdit(mainWidget);
-    GPIBPort_le->setMaximumSize(QSize(250, 16777215));
+    GPIBPort_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(GPIBPort_le, 1, 5, 1, 1);
 
     //信号载频
     QLabel * label_66 = new QLabel(mainWidget);
     label_66->setText(QStringLiteral("信号载频(MHZ)"));
-    label_66->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_66->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_66->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_66, 2, 0, 1, 1);
 
     signalCarrierFrequency_le = new QLineEdit(mainWidget);
-    signalCarrierFrequency_le->setMaximumSize(QSize(250, 16777215));
+    signalCarrierFrequency_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(signalCarrierFrequency_le, 2, 1, 1, 1);
 
     //信号重复周期
     QLabel * label_67 = new QLabel(mainWidget);
     label_67->setText(QStringLiteral("信号重复周期(us)"));
-    label_67->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_67->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_67->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_67, 2, 2, 1, 1);
 
     signalRepetitionPeriod_le = new QLineEdit(mainWidget);
-    signalRepetitionPeriod_le->setMaximumSize(QSize(250, 16777215));
+    signalRepetitionPeriod_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(signalRepetitionPeriod_le, 2, 3, 1, 1);
 
     //信号脉宽
     QLabel * label_68 = new QLabel(mainWidget);
     label_68->setText(QStringLiteral("信号脉宽(us)"));
-    label_68->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_68->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_68->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_68, 2, 4, 1, 1);
 
     signalPulseWidth_le = new QLineEdit(mainWidget);
-    signalPulseWidth_le->setMaximumSize(QSize(250, 16777215));
+    signalPulseWidth_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(signalPulseWidth_le, 2, 5, 1, 1);
 
     //信号功率
     QLabel * label_70 = new QLabel(mainWidget);
     label_70->setText(QStringLiteral("信号功率(dBm)"));
-    label_70->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_70->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_70->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_70, 3, 0, 1, 1);
 
     signalPower_le = new QLineEdit(mainWidget);
-    signalPower_le->setMaximumSize(QSize(250, 16777215));
+    signalPower_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(signalPower_le, 3, 1, 1, 1);
 
     //射频开关控制
     QLabel * label_71 = new QLabel(mainWidget);
     label_71->setText(QStringLiteral("射频开关控制"));
-    label_71->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_71->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_71->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_71, 3, 2, 1, 1);
 
     radioFrequencySwitchControl_check = new QCheckBox(mainWidget);
-    radioFrequencySwitchControl_check->setMaximumSize(QSize(250, 16777215));
+    radioFrequencySwitchControl_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(radioFrequencySwitchControl_check, 3, 3, 1, 1);
 
     //脉冲开关控制
     QLabel * label_72 = new QLabel(mainWidget);
     label_72->setText(QStringLiteral("脉冲开关控制"));
-    label_72->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_72->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_72->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_72, 3, 4, 1, 1);
 
     ImpulseSwitchControl_check = new QCheckBox(mainWidget);
-    ImpulseSwitchControl_check->setMaximumSize(QSize(250, 16777215));
+    ImpulseSwitchControl_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(ImpulseSwitchControl_check, 3, 5, 1, 1);
 
     //中心频率
     QLabel * label_62 = new QLabel(mainWidget);
     label_62->setText(QStringLiteral("中心频率(MHz)"));
-    label_62->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_62->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_62->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_62, 4, 0, 1, 1);
 
     centreFrequency_le = new QLineEdit(mainWidget);
-    centreFrequency_le->setMaximumSize(QSize(250, 30));
+    centreFrequency_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(centreFrequency_le, 4, 1, 1, 1);
 
     //显示带宽
     QLabel * label_59 = new QLabel(mainWidget);
     label_59->setText(QStringLiteral("显示带宽(MHz)"));
-    label_59->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_59->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_59->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_59, 4, 2, 1, 1);
 
     displayBandwidth_le = new QLineEdit(mainWidget);
-    displayBandwidth_le->setMaximumSize(QSize(250, 30));
+    displayBandwidth_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(displayBandwidth_le, 4, 3, 1, 1);
 
     //中频带宽
     QLabel * label_63 = new QLabel(mainWidget);
     label_63->setText(QStringLiteral("中频带宽(MHz)"));
-    label_63->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_63->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_63->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_63, 4, 4, 1, 1);
 
     IFBandwidth_le = new QLineEdit(mainWidget);
-    IFBandwidth_le->setMaximumSize(QSize(250, 30));
+    IFBandwidth_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(IFBandwidth_le, 4, 5, 1, 1);
 
     //视频带宽
     QLabel * label_60 = new QLabel(mainWidget);
     label_60->setText(QStringLiteral("视频带宽(MHz)"));
-    label_60->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_60->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_60->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_60, 5, 0, 1, 1);
 
     videoBandwidth_le = new QLineEdit(mainWidget);
-    videoBandwidth_le->setMaximumSize(QSize(250, 30));
+    videoBandwidth_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(videoBandwidth_le, 5, 1, 1, 1);
 
     //扫描时间
     QLabel * label_55 = new QLabel(mainWidget);
     label_55->setText(QStringLiteral("扫描时间(ms)"));
-    label_55->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_55->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_55->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_55, 5, 2, 1, 1);
 
     scanTime_le = new QLineEdit(mainWidget);
-    scanTime_le->setMaximumSize(QSize(250, 30));
+    scanTime_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(scanTime_le, 5, 3, 1, 1);
 
     //扫描点数
     QLabel * label_52 = new QLabel(mainWidget);
     label_52->setText(QStringLiteral("扫描点数"));
-    label_52->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_52->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_52->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_52, 5, 4, 1, 1);
 
     scanPoints_le = new QLineEdit(mainWidget);
-    scanPoints_le->setMaximumSize(QSize(250, 30));
+    scanPoints_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(scanPoints_le, 5, 5, 1, 1);
 
     //是否读取频谱数据
     QLabel * label_61 = new QLabel(mainWidget);
     label_61->setText(QStringLiteral("是否读取频谱数据"));
-    label_61->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_61->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_61->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_61, 6, 0, 1, 1);
 
     ifReadspectrumData_check = new QCheckBox(mainWidget);
-    ifReadspectrumData_check->setMaximumSize(QSize(250, 30));
+    ifReadspectrumData_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(ifReadspectrumData_check, 6, 1, 1, 1);
 
     //信号基底
     QLabel * label_53 = new QLabel(mainWidget);
     label_53->setText(QStringLiteral("信号基底(dBm)"));
-    label_53->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_53->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_53->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_53, 6, 2, 1, 1);
 
     signalBase_le = new QLineEdit(mainWidget);
-    signalBase_le->setMaximumSize(QSize(250, 30));
+    signalBase_le->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(signalBase_le, 6, 3, 1, 1);
 
     //功率校准控制
     QLabel * label_54 = new QLabel(mainWidget);
     label_54->setText(QStringLiteral("功率校准控制"));
-    label_54->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_54->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_54->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_54, 6, 4, 1, 1);
 
     powerCalibrationControl_check = new QCheckBox(mainWidget);
-    powerCalibrationControl_check->setMaximumSize(QSize(250, 30));
+    powerCalibrationControl_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(powerCalibrationControl_check, 6, 5, 1, 1);
 
     //功率立即校准
     QLabel * label_56 = new QLabel(mainWidget);
     label_56->setText(QStringLiteral("功率立即校准"));
-    label_56->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_56->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_56->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_56, 7, 0, 1, 1);
 
     immediatePowerCalibration_check = new QCheckBox(mainWidget);
-    immediatePowerCalibration_check->setMaximumSize(QSize(250, 30));
+    immediatePowerCalibration_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(immediatePowerCalibration_check, 7, 1, 1, 1);
 
     //脉内调制
     QLabel * label_69 = new QLabel(mainWidget);
     label_69->setText(QStringLiteral("脉内调制"));
-    label_69->setMinimumSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
+    label_69->setFixedSize(QSize(LABEL_MIN_WIDTH, LABEL_MIN_HEIGHT));
     label_69->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     gridLayout->addWidget(label_69, 7, 2, 1, 1);
 
     intrapulseSwitchControl_check = new QCheckBox(mainWidget);
-    intrapulseSwitchControl_check->setMaximumSize(QSize(250, 16777215));
+    intrapulseSwitchControl_check->setFixedSize(LINEDIT_FIXED_WIDTH,LINEDIT_FIXED_HEIGHT);
     gridLayout->addWidget(intrapulseSwitchControl_check, 7, 3, 1, 1);
 
     mainWidget->setLayout(gridLayout);
@@ -335,30 +340,6 @@ InstrumentControlDialog::InstrumentControlDialog(QWidget *parent)
     setButton(DialogProxy::Ok|DialogProxy::Cancel);
     setContentWidget(d_ptr->mainWidget);
     setWindowTitle(tr("Instrument Control"));
-    
-//    QRegExp reip("^((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)$");
-//    m_IPValidator = new QRegExpValidator(reip, this);
-//    ui->IPAddress_le->setValidator(m_IPValidator);
-    
-//    QRegExp reint("^(-[0-9]\\d*|[0-9]\\d*)?$");  //整数
-//    QRegExpValidator *Validator_int = new QRegExpValidator(reint, this);
-//    ui->networkPort_le->setValidator(Validator_int);
-//    ui->GPIBPort_le->setValidator(Validator_int);
-//    ui->scanPoints_le->setValidator(Validator_int);
-//    ui->scanTime_le->setValidator(Validator_int);
-    
-//    QRegExp refloat("^((-[0-9]\\d*|[0-9]\\d*)\\.?)?([0-9]){5}$");  //浮点类型 可输入小数点后五位
-//    QRegExpValidator *Validator_float = new QRegExpValidator(refloat, this);
-//    ui->signalCarrierFrequency_le->setValidator(Validator_float);
-//    ui->signalRepetitionPeriod_le->setValidator(Validator_float);
-//    ui->signalPulseWidth_le->setValidator(Validator_float);
-//    ui->signalPower_le->setValidator(Validator_float);
-//    ui->centreFrequency_le->setValidator(Validator_float);
-//    ui->displayBandwidth_le->setValidator(Validator_float);
-//    ui->IFBandwidth_le->setValidator(Validator_float);
-//    ui->videoBandwidth_le->setValidator(Validator_float);
-//    ui->signalBase_le->setValidator(Validator_float);
-    
 }
 
 InstrumentControlDialog::~InstrumentControlDialog()
@@ -369,6 +350,7 @@ InstrumentControlDialog::~InstrumentControlDialog()
 void InstrumentControlDialog::setWindowData(InstrumentControl * instrument)
 {
     Q_D(InstrumentControlDialog);
+    d->modifyInfo = instrument;
     //仪器类型
     d->type_cbox->setCurrentIndex(instrument->instrumentType);
     //仪器型号
@@ -428,14 +410,13 @@ void InstrumentControlDialog::setWindowData(InstrumentControl * instrument)
 InstrumentControl *InstrumentControlDialog::getWindowData()
 {
     Q_D(InstrumentControlDialog);
-
-////    instrumentControl.instrumentControl
-////    if (ui->le_originFrequency->text() == NULL || ui->le_stopFrequency->text() == NULL ||
-////            ui->le_frequencyStopping->text() == NULL)
-////        return;
-
     if(d->clickedButt == DialogProxy::Ok){
-        InstrumentControl * instrument = new InstrumentControl;
+        InstrumentControl * instrument = NULL;
+        if(d->modifyInfo)
+            instrument = d->modifyInfo;
+        else
+            instrument = new InstrumentControl;
+
         instrument->excuteTime = QDateTime::currentDateTime();
         instrument->lastTime = 1;
 
@@ -482,9 +463,9 @@ InstrumentControl *InstrumentControlDialog::getWindowData()
         //视频带宽
         instrument->videoBandwidth = d->videoBandwidth_le->text().toDouble();
         //扫描时间
-        instrument->scanTime = d->scanTime_le->text().toDouble();
+        instrument->scanTime = d->scanTime_le->text().toInt();
         //扫描点数
-        instrument->scanPoints = d->scanPoints_le->text().toDouble();
+        instrument->scanPoints = d->scanPoints_le->text().toInt();
         //是否读取频谱数据
         if (d->ifReadspectrumData_check->checkState() == Qt::Checked)
             instrument->ifReadspectrumData = 1;
@@ -507,7 +488,7 @@ InstrumentControl *InstrumentControlDialog::getWindowData()
 
 QSize InstrumentControlDialog::sizeHint() const
 {
-    return QSize(700,380);
+    return QSize(700,500);
 }
 
 void InstrumentControlDialog::respButtClicked(DialogProxy::StandardButton butt)
@@ -528,6 +509,28 @@ void InstrumentControlDialog::respButtClicked(DialogProxy::StandardButton butt)
 
 void InstrumentControlDialog::respOk()
 {
+    Q_D(InstrumentControlDialog);
+
+    RAndCombineValidator validator;
+    validator.addValidator(new RStringValidator(d->ipAddress_le->text(),RValid::R_IP));
+    validator.addValidator(new RNumericValidator<short>(d->networkPort_le->text().toShort(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<short>(d->GPIBPort_le->text().toShort(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->signalCarrierFrequency_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->signalRepetitionPeriod_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->signalPulseWidth_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->signalPower_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->centreFrequency_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->displayBandwidth_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->IFBandwidth_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->videoBandwidth_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<int>(d->scanTime_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<int>(d->scanPoints_le->text().toDouble(),RValid::Ge,0));
+    validator.addValidator(new RNumericValidator<double>(d->signalBase_le->text().toDouble(),RValid::Ge,0));
+
+    if(validator.validate() == RValid::Invalid){
+        QMessageBox::warning(this,tr("warning"),tr("Input information validation failed!"),QMessageBox::Yes);
+        return;
+    }
     respCancel();
 }
 
