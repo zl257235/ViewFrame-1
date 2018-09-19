@@ -76,7 +76,7 @@ public:
     virtual bool startLayout(HealthData &data,bool ifUse)=0;                //开始布局
     virtual void flushScreen(HealthData &data);                             //根据数据刷新界面显示
 
-    void onMessage(MessageType::MessageType type);
+    void onMessage(MessageType::MessType type);
 
 public slots:
     void reLayout_BySize();                                                 //根据大小重新开始布局

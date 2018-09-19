@@ -174,7 +174,7 @@ void TableViewModel::updateTaskList(TaskInfoList &list)
     resetData();
 }
 
-void TableViewModel::onMessage(MessageType::MessageType type)
+void TableViewModel::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:

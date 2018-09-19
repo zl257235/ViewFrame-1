@@ -23,7 +23,7 @@ public:
 
      bool initialize();
      void release(){}
-     void onMessage(MessageType::MessageType type);
+     void onMessage(MessageType::MessType type);
      QSize sizeHint()const;
 
 private slots:

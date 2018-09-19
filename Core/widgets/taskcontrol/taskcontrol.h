@@ -23,7 +23,7 @@ public:
     ~TaskControl();
 
     void retranslateUi();
-    void onMessage(MessageType::MessageType type);
+    void onMessage(MessageType::MessType type);
     
 private slots:
     void viewTask(QModelIndex); /*!< 查看任务信息 */

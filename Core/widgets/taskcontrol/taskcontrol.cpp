@@ -81,6 +81,7 @@ public:
 void TaskControlPrivate::initView()
 {
     mainWidget = new QWidget(q_ptr);
+    mainWidget->setObjectName("Container");
 
     distrbuteButt = new QPushButton(mainWidget);
     QObject::connect(distrbuteButt, SIGNAL(pressed()), q_ptr, SLOT(distributeTask()));
@@ -101,7 +102,7 @@ void TaskControlPrivate::initView()
     vLayout->addWidget(taskView);
     vLayout->addWidget(toolWidget);
     vLayout->setSpacing(6);
-    vLayout->setContentsMargins(0, 0, 0, 0);
+    vLayout->setContentsMargins(1, 1, 1, 1);
 
     mainWidget->setLayout(vLayout);
 
@@ -222,7 +223,7 @@ void TaskControl::retranslateUi()
     }
 }
 
-void TaskControl::onMessage(MessageType::MessageType type)
+void TaskControl::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:

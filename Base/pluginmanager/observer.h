@@ -23,7 +23,7 @@ public:
     Observer();
     virtual ~Observer();
 
-    virtual void onMessage(MessageType::MessageType type) = 0;
+    virtual void onMessage(MessageType::MessType type) = 0;
 };
 
 } //namespace Base

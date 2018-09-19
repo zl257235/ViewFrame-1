@@ -58,7 +58,16 @@ const char SELECTED_LINE_COLOR[] = "rgb(34, 175, 75)";              /*!< 选中�
 //插件
 const char PLUGIN_TASK_CONTROL[] = "Rimserver.Plugin.TaskControl";
 const char PLUGIN_HEALTH_MANAGER[] = "Rimserver.Plugin.HealthManager";
+const char PLUGIN_DATA_DISPLAY[] = "Rimserver.Plugin.DataDisplay";
 const char PLUGIN_DATA_VIEW[] = "Rimserver.Plugin.DataView";
+//数据显示模块插件集合
+const char PLUGIN_RADIATION_SOURCE_TABLE[] = "Rimserver.Plugin.DataDisplay.RadiationSourceTable";
+const char PLUGIN_ALL_PLUS_TABLE[] = "Rimserver.Plugin.DataDisplay.AllPluseTable";
+const char PLUGIN_MF_ACQUISTION_TABLE[] = "Rimserver.Plugin.DataDisplay.MFAcquistionTable";
+const char PLUGIN_RADIA_SOURCE_MAP[] = "Rimserver.Plugin.DataDisplay.RadiaSourceMap";
+const char PLUGIN_ALL_PLUS_GRAPHICS[] = "Rimserver.Plugin.DataDisplay.AllPluseGraphics";
+const char PLUGIN_MF_QUISITION_GRAPHICS[] = "Rimserver.Plugin.DataDisplay.MFAcquisitionGraphics";
+const char PLUGIN_SPECTRUM_GRAPHICS[] = "Rimserver.Plugin.DataDisplay.SpectrumGraphics";
 
 //菜单栏
 const char MENU_BAR[] = "Rimserver.MenuBar";
@@ -66,8 +75,17 @@ const char MENU_BAR[] = "Rimserver.MenuBar";
 //菜单栏分组
 const char G_PROGRAM[]  = "Rimserver.Group.Program";
 const char G_SETTING[]  = "Rimserver.Group.Setting";
+const char DATA_VIEW[] = "Rimserver.Setting.DataView";
 const char G_HELP[]     = "Rimserver.Group.Help";
 const char DEFAULT_GROUP[] = "Rimserver.Default.Group";
+
+const char RADIASOURCETABLE_SETTING[] = "Rimserver.Setting.RadiaSourceTableSetting";        //数据源列表信息
+const char ALLPLUSETABLE_SETTING[] = "Rimserver.Setting.AllPluseTableSetting";              //全脉冲列表信息
+const char MFACQUISITIONTABLE_SETTING[] = "Rimserver.Setting.MFAcquisitionTableSetting";    //中频数据列表信息
+const char RADIASOURCEMAP_SETTING[] = "Rimserver.Setting.RadiaSourceMapSetting";            //数据源地图信息
+const char ALLPLUSEGRAPHICS_SETTING[] = "Rimserver.Setting.AllPluseGraphicsSetting";        //全脉冲图形信息
+const char MFACQUISITIONGRAPHICS_SETTING[] = "Rimserver.Setting.MFAcquisitionGraphicsSetting";//中频数据图形信息
+const char SPECTRUMGRAPHICS_SETTING[] = "Rimserver.Setting.SpectrumGraphicsSetting";        //频谱数据图形信息
 
 //G_PROGRAM 分组
 const char PROGRAM_EXIT[] = "Rimserver.Program.Exit";

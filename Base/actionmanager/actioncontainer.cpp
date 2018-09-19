@@ -67,7 +67,14 @@ void ActionContainerProxy::appendGroup(Id groupId)
 
 void ActionContainerProxy::insertGroup(Id before, Id groupId)
 {
-
+    QList<Group>::iterator it = m_groups.begin();
+    while (it != m_groups.end()) {
+        if (it->id == before) {
+            m_groups.insert(it, Group(groupId));
+            break;
+        }
+        ++it;
+    }
 }
 
 void ActionContainerProxy::addAction(Command *command, Id groupId)

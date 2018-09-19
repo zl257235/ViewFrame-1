@@ -21,7 +21,7 @@ void Subject::detach(Observer *obj)
     observers.remove(obj);
 }
 
-void Subject::notify(MessageType::MessageType type)
+void Subject::notify(MessageType::MessType type)
 {
     std::lock_guard<std::mutex> lg(m_mutex);
 

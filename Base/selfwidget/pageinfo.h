@@ -72,7 +72,7 @@ public:
      uint getCurPage();
      uint getLastPage();
 
-     void onMessage(MessageType::MessageType type);
+     void onMessage(MessageType::MessType type);
      void retranslateUi();
 
 private slots:

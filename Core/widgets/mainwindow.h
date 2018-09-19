@@ -32,7 +32,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void onMessage(MessageType::MessageType type);
+    void onMessage(MessageType::MessType type);
 
 private:
     void initMenu();

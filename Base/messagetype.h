@@ -17,7 +17,7 @@ namespace MessageType
  *  @brief 消息类型
  *  @details
  */
-enum MessageType{
+enum MessType{
     MESS_LAN_CHANGED            /*!< 语言切换 */
 };
 }

@@ -205,7 +205,7 @@ uint SwitchPage::getLastPage()
     return d->mlastPage;
 }
 
-void SwitchPage::onMessage(MessageType::MessageType type)
+void SwitchPage::onMessage(MessageType::MessType type)
 {
     Q_D(SwitchPage);
     switch(type){

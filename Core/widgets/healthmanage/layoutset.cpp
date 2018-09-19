@@ -167,7 +167,7 @@ void LayoutAndDisplay::flushScreen(HealthData &data)
     }
 }
 
-void LayoutAndDisplay::onMessage(MessageType::MessageType type)
+void LayoutAndDisplay::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:

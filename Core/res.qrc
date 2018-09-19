@@ -46,5 +46,6 @@
         <file>resource/technology/up_arrow_disabled.png</file>
         <file>resource/technology/Vmovetoolbar.png</file>
         <file>resource/technology/Vsepartoolbar.png</file>
+        <file>resource/technology/left_bottom.png</file>
     </qresource>
 </RCC>

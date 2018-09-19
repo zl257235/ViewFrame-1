@@ -30,7 +30,7 @@ public:
     void attach(Observer * obj);
     void detach(Observer * obj);
 
-    void notify(MessageType::MessageType type);
+    void notify(MessageType::MessType type);
 
 private:
     std::list<Observer *> observers;

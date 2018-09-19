@@ -47,7 +47,7 @@ bool HealthInfoDockPanel::initialize()
     return true;
 }
 
-void HealthInfoDockPanel::onMessage(MessageType::MessageType type)
+void HealthInfoDockPanel::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:

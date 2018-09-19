@@ -32,7 +32,7 @@ public:
     virtual bool initialize() = 0;
     virtual void release() = 0;
 
-    virtual void onMessage(MessageType::MessageType type) = 0;
+    virtual void onMessage(MessageType::MessType type) = 0;
 
 protected:
     Id m_id;

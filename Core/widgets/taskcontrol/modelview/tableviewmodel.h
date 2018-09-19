@@ -9,8 +9,6 @@
 
 namespace TaskControlModel {
 
-struct Task;
-
 class TableViewModel : public QAbstractTableModel , public Base::Observer
 {
     Q_OBJECT
@@ -28,7 +26,7 @@ public:
 
     void updateTaskList(TaskInfoList & list);
 
-    void onMessage(MessageType::MessageType type);
+    void onMessage(MessageType::MessType type);
   
 public:
     enum ColumnType

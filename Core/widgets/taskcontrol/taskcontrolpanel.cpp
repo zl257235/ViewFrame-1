@@ -21,7 +21,6 @@ TaskControlPanel::~TaskControlPanel()
 bool TaskControlPanel::initialize()
 {
     controlWidget = new TaskControl(this);
-    controlWidget->setObjectName("Panel_Container");
     setWidget(controlWidget);
 
     return true;
@@ -32,7 +31,7 @@ void TaskControlPanel::release()
 
 }
 
-void TaskControlPanel::onMessage(MessageType::MessageType type)
+void TaskControlPanel::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:

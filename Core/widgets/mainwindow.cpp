@@ -17,6 +17,15 @@
 #include "Base/util/rlog.h"
 #include "healthmanage/healthinfopannel.h"
 
+#include "datadisplay/datadisplaypanel.h"
+#include "datadisplay/radiationsourcetable.h"
+#include "datadisplay/allplusetable.h"
+#include "datadisplay/mfacquistiontable.h"
+#include "datadisplay/radiasourcemap.h"
+#include "datadisplay/allplusegraphics.h"
+#include "datadisplay/mfacquisitiongraphics.h"
+#include "datadisplay/spectrumgraphics.h"
+
 #include "widgets/taskcontrol/taskcontrolpanel.h"
 
 using namespace Base;
@@ -49,7 +58,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onMessage(MessageType::MessageType type)
+void MainWindow::onMessage(MessageType::MessType type)
 {
     switch(type){
         case MessageType::MESS_LAN_CHANGED:
@@ -71,6 +80,7 @@ void MainWindow::initMenu()
 
     //程序菜单
     serverMenu = ActionManager::instance()->createMenu(Constant::G_PROGRAM);
+    serverMenu->menu()->raise();
     serverMenu->appendGroup(Constant::G_PROGRAM);
     menubar->addMenu(serverMenu, Constant::G_PROGRAM);
 
@@ -280,11 +290,38 @@ void MainWindow::initComponent()
     TaskControlModel::TaskControlPanel * taskControl = new TaskControlModel::TaskControlPanel;
     HealthInfoDockPanel *healthControl = new HealthInfoDockPanel;
 
+    //数据显示模块，每个页面都是dock
+    DataView::RadiationSourceTable * radiationTable = new DataView::RadiationSourceTable;
+    DataView::AllPluseTable * allPluseTable = new DataView::AllPluseTable;
+    DataView::MFAcquistionTable * acquistionTable = new DataView::MFAcquistionTable;
+    DataView::RadiaSourceMap * radiaSourceMap = new DataView::RadiaSourceMap;
+    DataView::AllPluseGraphics * allPluseGraphics = new DataView::AllPluseGraphics;
+    DataView::MFAcquisitionGraphics * mfGraphics = new DataView::MFAcquisitionGraphics;
+    DataView::SpectrumGraphics * spectrumGraphics = new DataView::SpectrumGraphics;
+
     addDockWidget(Qt::LeftDockWidgetArea,taskControl);
-    addDockWidget(Qt::RightDockWidgetArea,healthControl);
+    splitDockWidget(taskControl,healthControl,Qt::Vertical);
+
+    addDockWidget(Qt::RightDockWidgetArea,radiationTable);
+    tabifyDockWidget(radiationTable,allPluseTable);
+    tabifyDockWidget(allPluseTable,acquistionTable);
+    tabifyDockWidget(acquistionTable,radiaSourceMap);
+    tabifyDockWidget(radiaSourceMap,allPluseGraphics);
+    tabifyDockWidget(allPluseGraphics,mfGraphics);
+    tabifyDockWidget(mfGraphics,spectrumGraphics);
+
+    radiationTable->raise();
 
     RSingleton<PluginManager>::instance()->addPlugin(taskControl);
     RSingleton<PluginManager>::instance()->addPlugin(healthControl);
+
+    RSingleton<PluginManager>::instance()->addPlugin(radiationTable);
+    RSingleton<PluginManager>::instance()->addPlugin(allPluseTable);
+    RSingleton<PluginManager>::instance()->addPlugin(acquistionTable);
+    RSingleton<PluginManager>::instance()->addPlugin(radiaSourceMap);
+    RSingleton<PluginManager>::instance()->addPlugin(allPluseGraphics);
+    RSingleton<PluginManager>::instance()->addPlugin(mfGraphics);
+    RSingleton<PluginManager>::instance()->addPlugin(spectrumGraphics);
 
     RSingleton<PluginManager>::instance()->load();
     PluginManager::ComponentMap maps = RSingleton<PluginManager>::instance()->plugins();
@@ -294,7 +331,6 @@ void MainWindow::initComponent()
         RComponent * comp = iter.value();
         comp->setFeatures(QDockWidget::DockWidgetMovable);
         comp->initialize();
-
         iter++;
     }
 }

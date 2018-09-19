@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core gui xml charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -55,7 +55,17 @@ SOURCES += main.cpp \
     widgets/healthmanage/healthstate_display.cpp \
     widgets/healthmanage/layoutset.cpp \
     widgets/healthmanage/dynamiclayoutbynet.cpp \
-    widgets/healthmanage/staticlayoutbyxml.cpp
+    widgets/healthmanage/staticlayoutbyxml.cpp \
+    widgets/datadisplay/allplusegraphics.cpp \
+    widgets/datadisplay/allplusetable.cpp \
+    widgets/datadisplay/datadisplay.cpp \
+    widgets/datadisplay/mfacquisitiongraphics.cpp \
+    widgets/datadisplay/mfacquistiontable.cpp \
+    widgets/datadisplay/radiasourcemap.cpp \
+    widgets/datadisplay/radiationsourcetable.cpp \
+    widgets/datadisplay/spectrumgraphics.cpp \
+    widgets/datadisplay/table.cpp \
+    widgets/datadisplay/datadisplaypanel.cpp
 
 HEADERS  += \
     widgets/mainwindow.h \
@@ -85,10 +95,24 @@ HEADERS  += \
     widgets/healthmanage/layoutset.h \
     widgets/healthmanage/dynamiclayoutbynet.h \
     widgets/healthmanage/staticlayoutbyxml.h \
-    widgets/healthmanage/head.h
+    widgets/healthmanage/head.h \
+    widgets/datadisplay/allplusegraphics.h \
+    widgets/datadisplay/allplusetable.h \
+    widgets/datadisplay/datadisplay.h \
+    widgets/datadisplay/mfacquisitiongraphics.h \
+    widgets/datadisplay/mfacquistiontable.h \
+    widgets/datadisplay/radiasourcemap.h \
+    widgets/datadisplay/radiationsourcetable.h \
+    widgets/datadisplay/spectrumgraphics.h \
+    widgets/datadisplay/table.h \
+    widgets/datadisplay/datadisplaypanel.h
 
 FORMS    += mainwindow.ui \
-    widgets/taskcontrol/gathercontroldialog.ui
+    widgets/taskcontrol/gathercontroldialog.ui \
+    widgets/datadisplay/mfacquisitiongraphics.ui \
+    widgets/datadisplay/radiasourcemap.ui \
+    widgets/datadisplay/radiationsourcetable.ui \
+    widgets/datadisplay/spectrumgraphics.ui
 
 win32-msvc2013{
     LIBS+= ../Lib/Base.lib
