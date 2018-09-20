@@ -3,7 +3,6 @@
 #include <QMenu>
 #include <QTimer>
 #include <QDebug>
-#include <QArrayData>
 #include <QDateTime>
 #include <QModelIndex>
 #include <QTimerEvent>
@@ -17,7 +16,6 @@
 #include "modelview/tableviewmodel.h"
 #include "modelview/tableviewdelegate.h"
 #include "utils.h"
-#include "task.h"
 
 #include "bandcontroldialog.h"
 #include "turntablecontroldialog.h"
@@ -35,7 +33,9 @@ class TaskControlPrivate
 {
     Q_DECLARE_PUBLIC(TaskControl)
 public:
-    explicit TaskControlPrivate(TaskControl * q):q_ptr(q),cacheTaskInfo(NULL){
+    explicit TaskControlPrivate(TaskControl * q):q_ptr(q),cacheTaskInfo(NULL),isDistributing(false),distributeTimer(NULL)
+        ,hasDistriCount(0)
+    {
         initTableView();
         initTableViewMenu();
         initView();
@@ -44,10 +44,6 @@ public:
     void initView();
     void initTableView();
     void initTableViewMenu();
-
-    bool bPendingFlag = false;                   //是否处于下发任务状态
-    int iPendingTimerID;                         //下发任务定时器ID
-    QList<pendingTaskState> m_pendingTaskInfo;   //当前任务下发信息
 
     TableView* taskView;
     TableViewModel * taskViewModel;
@@ -61,6 +57,10 @@ public:
     TaskInfoList taskInfoList;          /*!< 任务集合 */
     QPoint contextPoint;                /*!< 表格右键事件菜单 */
     TaskInfo * cacheTaskInfo;           /*!< 复制的任务信息 */
+
+    int hasDistriCount;                 /*!< 已经下发的数量 */
+    bool isDistributing;
+    QTimer * distributeTimer;           /*!< 下发定时器 */
 
     QAction *bandAction;
     QAction *stateAction;
@@ -121,7 +121,7 @@ void TaskControlPrivate::initTableView()
     taskViewDelegate = new TableViewDelegate(taskView);
 
     taskView->setModel(taskViewModel);
-    taskView->setItemDelegateForColumn(3, taskViewDelegate);
+    taskView->setItemDelegate(taskViewDelegate);
     QObject::connect(taskView,SIGNAL(contextMenuPos(QPoint)),q_ptr,SLOT(tableContextPoint(QPoint)));
     QObject::connect(taskView, SIGNAL(tableCheckDoubleSignal(QModelIndex)), q_ptr, SLOT(viewTask(QModelIndex)));
 }
@@ -216,10 +216,10 @@ void TaskControl::retranslateUi()
     d->copyAction->setText(QObject::tr("Copy task"));
     d->pasteAction->setText(QObject::tr("Paste task"));
 
-    if(!d->bPendingFlag){
-        d->distrbuteButt->setText(QObject::tr("Distribute task"));
+    if(!d->isDistributing){
+        d->distrbuteButt->setText(QObject::tr("Issued task"));
     }else{
-        d->distrbuteButt->setText(QObject::tr("In process"));
+        d->distrbuteButt->setText(QObject::tr("Stop issued"));
     }
 }
 
@@ -234,139 +234,45 @@ void TaskControl::onMessage(MessageType::MessType type)
     }
 }
 
-void TaskControl::timerEvent(QTimerEvent *event)
-{
-    Q_D(TaskControl);
-    if (event->timerId() == d->iPendingTimerID)
-    {
-        for (int i = 0; i < d->m_pendingTaskInfo.count(); i++)
-        {
-            pendingTaskState pendingtaskstate = d->m_pendingTaskInfo.at(i);
-            //当前任务是否已经下发
-            if (!pendingtaskstate.issued)
-            {
-                QDateTime tasktime = QDateTime::fromString(pendingtaskstate.ExcutionTime, "yyyy-MM-dd HH:mm:ss");
-                QDateTime nowTime = QDateTime::currentDateTime();
-                if (nowTime >= tasktime)
-                {
-//                    Task* taskData = d->m_AllDisplayTasks->getAllTaskData(i);
-//                    if (taskData == NULL)
-//                        return;
-                    
-//                    //当前任务已下发执行下发操作，复位标识位
-//                    pendingtaskstate.issued = true;
-//                    d->m_pendingTaskInfo.replace(i,pendingtaskstate);
-                    
-//                    QByteArray buffArray;
-//                    int controlLength = 0;
-//                    BandControl bandcontrol;
-                    
-//                    Type type = pendingtaskstate.type;
-                    
-//                    if (type == Type::Band)
-//                    {
-//                        BandTask *band = taskData->getControlClass<BandTask>();
-//                        if (band == NULL)
-//                            return;
-//                        /*BandControl */bandcontrol = band->getTaskControlData();
-//                        controlLength = sizeof(bandcontrol);
-                        
-//                        buffArray.resize(controlLength); //设置容量
-//                        memcpy(buffArray.data(),&bandcontrol,sizeof(BandControl)); //指针移动,写入多个数据
-                        
-//                        BandControl *person=(BandControl*)buffArray.data();
-//                    }
-//                    else if (type == Type::State)
-//                    {
-//                        StateTask *state = taskData->getControlClass<StateTask>();
-//                        StateControl bandcontrol = state->getTaskControlData();
-//                    }
-//                    else if (type == Type::Gather)
-//                    {
-//                        GatherTask *gather = taskData->getControlClass<GatherTask>();
-//                        GatherControl bandcontrol = gather->getTaskControlData();
-//                    }
-//                    else if (type == Type::SelfCheck)
-//                    {
-//                        SelfCheckTask *selfcheck = taskData->getControlClass<SelfCheckTask>();
-//                        SelfCheckControl bandcontrol = selfcheck->getTaskControlData();
-//                    }
-//                    else if (type == Type::Instrument)
-//                    {
-//                        InstrumentTask *instrument = taskData->getControlClass<InstrumentTask>();
-//                        InstrumentControl bandcontrol = instrument->getTaskControlData();
-//                    }
-//                    else if (type == Type::Turntable)
-//                    {
-//                        TurntableTask *turntable = taskData->getControlClass<TurntableTask>();
-//                        TurntableControl bandcontrol = turntable->getTaskControlData();
-//                    }
-//                    else if (type == Type::PlayBack)
-//                    {
-//                        PlayBackTask *playback = taskData->getControlClass<PlayBackTask>();
-//                        PlayBackControl bandcontrol = playback->getTaskControlData();
-//                    }
-                }
-            }
-        }   //End For
-        
-    }
-}
-
-/**
- * @brief TaskControl::SendTaskControl
- * @param b 
- * 任务下发按钮事件 将表格中所有任务控制信息通过udp向外发送
+/*!
+ * @brief 定时下发任务
  */
 void TaskControl::distributeTask()
 {
     Q_D(TaskControl);
-    //如果当前没有任务下发则下发当前所有信息
-//    if (d->m_pendingTaskInfo.isEmpty())
-//    {
-//        QList<TaskInfo> taskinfo = d->taskViewModel->getTaskInfoList();
-//        if (taskinfo.isEmpty())
-//            return;
-        
-//        for (int i = 0; i < taskinfo.count(); i++)
-//        {
-//            pendingTaskState pendingtask;
-//            pendingtask.ifExists = true;
-//            pendingtask.issued = false;
-//            pendingtask.type = taskinfo.at(i).type;
-//            pendingtask.ExcutionTime = taskinfo.at(i).taskExcutionTime;
-//            d->m_pendingTaskInfo.append(pendingtask);
-//        }
-//    }
-//    else    //如果已经有下发任务则添加没有下发过的任务
-//    {
-//        QList<TaskInfo> taskinfo = d->taskViewModel->getTaskInfoList();
-//        if (taskinfo.isEmpty())
-//            return;
-        
-//        for (int i = 0; i < taskinfo.count(); i++)
-//        {
-//            if (i+1 > d->m_pendingTaskInfo.count())
-//            {
-//                pendingTaskState pendingtask;
-//                pendingtask.ifExists = true;
-//                pendingtask.issued = false;
-//                pendingtask.type = taskinfo.at(i).type;
-//                pendingtask.ExcutionTime = taskinfo.at(i).taskExcutionTime;
-//                d->m_pendingTaskInfo.insert(i, pendingtask);
-//            }
-//        }
-//    }
-    
-    if (d->bPendingFlag)
-    {
-        this->killTimer(d->iPendingTimerID);
+    if(d->taskInfoList.size() == 0){
+        QMessageBox::warning(this,tr("warning"),tr("Task list is empty!"),QMessageBox::Yes);
+        return;
     }
-    else
-    {
-        d->iPendingTimerID = this->startTimer(2000);
+
+    if(d->distributeTimer == NULL){
+        d->distributeTimer = new QTimer;
+        d->distributeTimer->setInterval(1000);
+        connect(d->distributeTimer,SIGNAL(timeout()),this,SLOT(checkDistributeTask()));
     }
-    d->bPendingFlag = !d->bPendingFlag;
+
+    if(d->isDistributing){
+        d->distributeTimer->stop();
+    }else{
+        d->distributeTimer->start();
+    }
+    d->isDistributing = !d->isDistributing;
+    retranslateUi();
+}
+
+/*!
+ * @brief 定时下发任务
+ * @details 按照每个任务的执行时间，通过定时器的方式将其下发; \p
+ *          每个任务只下发一次，按照任务创建的顺序依次下发: \p
+ *          1.若当前任务的执行时间早于程序执行时间，则提示下发错误； \p
+ *          2.下发按照任务列表和绝对时间下发 \p
+ *          3.
+ */
+void TaskControl::checkDistributeTask()
+{
+    Q_D(TaskControl);
+
+    //TODO 20180920 待添加下发代码
 }
 
 /*!
@@ -610,20 +516,82 @@ void TaskControl::addNewTask()
 void TaskControl::copyTable()
 {
     Q_D(TaskControl);
-    bool flag = false;
-    QModelIndex index = currentIndex(flag);
-    if(flag){
+    bool existed = false;
+    QModelIndex index = currentIndex(existed);
+    if(existed){
+        if(d->cacheTaskInfo)
+            delete d->cacheTaskInfo;
 
+        bool copyResult = false;
+        TaskInfo * selectedTask = d->taskInfoList.at(index.row());
+        switch(selectedTask->taskType)
+        {
+            case Band:
+                       copyResult = executeCopy<BandControl>(selectedTask);
+                 break;
+            case State:
+                       copyResult = executeCopy<StateControl>(selectedTask);
+                 break;
+            case Gather:
+                       copyResult = executeCopy<GatherControl>(selectedTask);
+                 break;
+            case SelfCheck:
+                       copyResult = executeCopy<SelfCheckControl>(selectedTask);
+                 break;
+            case Instrument:
+                       copyResult = executeCopy<InstrumentControl>(selectedTask);
+                 break;
+            case Turntable:
+                       copyResult = executeCopy<TurntableControl>(selectedTask);
+                 break;
+            case PlayBack:
+                       copyResult = executeCopy<PlayBackControl>(selectedTask);
+                 break;
+            default:
+                break;
+        }
+
+        if(!copyResult){
+            d->cacheTaskInfo = NULL;
+            QMessageBox::warning(this,tr("warning"),tr("Copy task failed!"),QMessageBox::Yes);
+        }
     }
 }
 
 /*!
  * @brief 粘贴任务信息
- * @details 将复制的任务信息粘贴到当前行的下方
+ * @details 1.若不是最后一行，将复制的任务信息粘贴到当前行 \p
+ *          2.若是最后一行，则粘贴在最后一行 \p
  */
 void TaskControl::pasteTask()
 {
     Q_D(TaskControl);
+    if(d->cacheTaskInfo == NULL){
+        QMessageBox::warning(this,tr("warning"),tr("No tasks to paste!"),QMessageBox::Yes);
+        return;
+    }
+    bool existed = false;
+    QModelIndex index = currentIndex(existed);
+    if(existed){
+        d->taskInfoList.insert(index.row(),d->cacheTaskInfo);
+    }else{
+        d->taskInfoList.append(d->cacheTaskInfo);
+    }
+    d->cacheTaskInfo = NULL;
+    d->taskViewModel->updateTaskList(d->taskInfoList);
+}
+
+template<class T>
+bool TaskControl::executeCopy(TaskInfo *selectedTask)
+{
+    Q_D(TaskControl);
+    T * copyTask = dynamic_cast<T *>(selectedTask);
+    if(copyTask){
+        T * control = new T(*copyTask);
+        d->cacheTaskInfo = control;
+        return true;
+    }
+    return false;
 }
 
 } //namespace TaskControlModel

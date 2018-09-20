@@ -1,4 +1,14 @@
-﻿#ifndef TASKCONTROL_H
+﻿/*!
+ *  @brief     任务控制面板
+ *  @details
+ *  @author    wlc
+ *  @version   1.0
+ *  @date      2018.09.20
+ *  @warning
+ *  @copyright NanJing RenGu.
+ *  @note
+ */
+#ifndef TASKCONTROL_H
 #define TASKCONTROL_H
 
 #include <QSharedPointer>
@@ -34,15 +44,17 @@ private slots:
 
     void addNewTask();          /*!< 添加任务 */
     void distributeTask();      /*!< 下发任务 */
+    void checkDistributeTask();
 
     void tableContextPoint(QPoint point);
 
-    virtual void timerEvent(QTimerEvent *event);
-    
 private:
     void initNetWork();
     QModelIndex currentIndex(bool &validIndex);
     void showEditWindow(QModelIndex index);
+
+    template<class T>
+    bool executeCopy(TaskInfo * selectedTask);
 
 private:
     QSharedPointer<TaskControlPrivate> d_ptr;

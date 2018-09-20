@@ -27,58 +27,33 @@ int TableViewModel::columnCount(const QModelIndex & index) const
     return headInfo.size();
 }
 
-//数据更改后将新数据重新填充至表格，并更新链表
 bool TableViewModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid())
+    if (!index.isValid() || index.row() >= taskList.size())
         return false;
 
     int col = index.column();
     int row = index.row();
     
-//    TaskInfo taskInfo = m_taskInfo.at(row);
+    TaskInfo * taskInfo = taskList.at(row);
     
-//    switch (role) {
-//    case Qt::EditRole:
-//        /*if (col == NO)
-//        {
-//            taskInfo.no = value.toInt();
-//            m_taskInfo.replace(row, taskInfo);
-//            emit dataChanged(index, index);
-//            break;
-//        } else if (col == TYPE) {
-//            taskInfo.type = (Type)value.toInt();
-//            emit dataChanged(index, index);
-//            m_taskInfo.replace(row, taskInfo);
-//            break;
-//        } else */if (col == PARAMENTER) {
-//            taskInfo.parameter = value.toString();
-//            m_taskInfo.replace(row, taskInfo);
-//            emit dataChanged(index, index);
-//            break;
-//        } else if (col == EXCUTIONTTIME) {
-//            taskInfo.taskExcutionTime = value.toString();
-//            m_taskInfo.replace(row, taskInfo);
-//            emit dataChanged(index, index);
-//            break;
-//        } else if (col == EXCUTIONTTIMELONG) {
-//            taskInfo.taskExcutionTimeLong = value.toString();
-//            m_taskInfo.replace(row, taskInfo);
-//            emit dataChanged(index, index);
-//            break;
-//        }
-//        break;
-//    case Qt::DisplayRole:
-//    case Qt::CheckStateRole:
-//    case Qt::UserRole:
-//        break;
-//    default:
-//        return false;
-//    }
+    switch (role) {
+        case Qt::EditRole:
+            if (col == PARAMENTER) {
+                taskInfo->parameter = value.toString();
+            } else if (col == EXCUTIONTTIME) {
+                taskInfo->excuteTime = value.toDateTime();
+            } else if (col == EXCUTIONTTIMELONG) {
+                taskInfo->lastTime = value.toInt();
+            }
+            break;
+        default:
+            return false;
+    }
+    resetData();
     return true;
 }
 
-//返回一个项的任意角色的值，这个项被指定为QModelIndex
 QVariant TableViewModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= taskList.size())
@@ -96,7 +71,6 @@ QVariant TableViewModel::data(const QModelIndex &index, int role) const
                 switch (static_cast<TaskHead>(index.column())) {
                     case T_No:
                         return QString("%1").arg(row+1);
-                        break;
                     case T_TYPE:
                         {
                             switch(taskList.at(row)->taskType){
@@ -121,16 +95,22 @@ QVariant TableViewModel::data(const QModelIndex &index, int role) const
                         break;
                     case T_PARAMETERS:
                         return taskList.at(row)->parameter;
-                        break;
                     case T_E_TIME:
-                        return taskList.at(row)->excuteTime;
-                        break;
+                        return taskList.at(row)->excuteTime.toString("yyyy-MM-dd hh:mm:ss");
                     case T_E_TIME_LONG:
                         return taskList.at(row)->lastTime;
-                        break;
+                    case T_DIS_STATE:
+                        if(taskList.at(row)->dstate == Issued)
+                            return QObject::tr("Issued");
+                        else if(taskList.at(row)->dstate == Error_Issued)
+                            return QObject::tr("Error Issued");
+                        else
+                            return QObject::tr("Not-Issued");
+                    default:
+                        return QVariant("");
                 }
-                    }
-        break;
+            }
+            break;
 
         default:
             break;
@@ -156,16 +136,18 @@ Qt::ItemFlags TableViewModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return 0;
 
+    Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+
     switch (static_cast<TaskHead>(index.column())) {
         case T_PARAMETERS:
         case T_E_TIME:
         case T_E_TIME_LONG:
-                return Qt::ItemIsEditable | QAbstractTableModel::flags(index);
+                return Qt::ItemIsEditable | flags;
             break;
         default:
             break;
     }
-    return  Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return  flags;
 }
 
 void TableViewModel::updateTaskList(TaskInfoList &list)
@@ -196,7 +178,7 @@ void TableViewModel::retranslateUi()
 {
     headInfo.clear();
     headInfo<<QObject::tr("Index")<<QObject::tr("Type")<<QObject::tr("Parameter")
-                  <<QObject::tr("Dispatch Time")<<QObject::tr("Execute Time");
+                  <<QObject::tr("Dispatch Time")<<QObject::tr("Execute Time")<<QObject::tr("Issued status");
 }
 
 } //namespace TaskControlModel

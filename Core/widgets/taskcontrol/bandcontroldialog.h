@@ -1,7 +1,7 @@
 ﻿/*!
  *  @brief     频率控制
  *  @details
- *  @author    wey
+ *  @author    wlc
  *  @version   1.0
  *  @date      2018.09.11
  *  @warning

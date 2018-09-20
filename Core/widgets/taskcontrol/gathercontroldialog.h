@@ -1,7 +1,7 @@
 ﻿/*!
  *  @brief     采集控制信息窗口
  *  @details
- *  @author    wey
+ *  @author    wlc
  *  @version   1.0
  *  @date      2018.09.12
  *  @warning

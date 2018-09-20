@@ -47,11 +47,21 @@ enum Type{
  *  @brief 表头字段
  */
 enum TaskHead{
-    T_No = 0,                /*!< 序号 */
+    T_No = 0,               /*!< 序号 */
     T_TYPE,                 /*!< 任务类型 */
     T_PARAMETERS,           /*!< 任务参数 */
     T_E_TIME,               /*!< 任务执行时间 */
-    T_E_TIME_LONG           /*!< 任务执行时长 */
+    T_E_TIME_LONG,          /*!< 任务执行时长 */
+    T_DIS_STATE             /*!< 下发状态 */
+};
+
+/*!
+ *  @brief 下发状态
+ */
+enum DistuributeState{
+    Not_Issued,       /*!< 未下发 */
+    Issued,           /*!< 已下发 */
+    Error_Issued      /*!< 下发错误 */
 };
 
 /*!
@@ -60,10 +70,22 @@ enum TaskHead{
  */
 struct TaskInfo
 {
+    TaskInfo(){
+        this->dstate = Not_Issued;
+    }
+    TaskInfo(const TaskInfo & info){
+        this->taskType = info.taskType;
+        this->parameter = info.parameter;
+        this->excuteTime = info.excuteTime;
+        this->lastTime = info.lastTime;
+        this->dstate = info.dstate;
+    }
+    virtual ~TaskInfo(){}
     Type taskType;                  /*!< 任务类型 */
     QString parameter;              /*!< 任务参数 */
     QDateTime excuteTime;           /*!< 任务执行时间 */
     long lastTime;                  /*!< 任务执行时长 */
+    DistuributeState dstate;        /*!< 下发状态 */
 
     virtual void dispatch() = 0;
 };
@@ -75,9 +97,15 @@ typedef QList<TaskInfo *> TaskInfoList;
  */
 struct BandControl: public TaskInfo
 {
-    BandControl(){
+    BandControl():TaskInfo(){
         taskType = Band;
     }
+    BandControl(const BandControl & info):TaskInfo(info){
+        this->originFrequency = info.originFrequency;
+        this->stopFrequency = info.stopFrequency;
+        this->frequencyStopping = info.frequencyStopping;
+    }
+    ~BandControl(){}
     double originFrequency;         /*!< 起始频率(HMz) */
     double stopFrequency;           /*!< 终止频率(HMz) */
     double frequencyStopping;       /*!< 频率步进(HMz) */
@@ -90,11 +118,30 @@ struct BandControl: public TaskInfo
  */
 struct StateControl  : public TaskInfo
 {
-    StateControl ()
+    StateControl():TaskInfo()
     {
         taskType = State;
         workCyclesNumber = 1;
     }
+    StateControl(const StateControl & info):TaskInfo(info){
+        this->workmode = info.workmode;
+        this->workCycles = info.workCycles;
+        this->workCyclesNumber = info.workCyclesNumber;
+        this->workingBandwidth = info.workingBandwidth;
+        this->antennaSelection1 = info.antennaSelection1;
+        this->antennaSelection2 = info.antennaSelection2;
+        this->attenuationCode1 = info.attenuationCode1;
+        this->attenuationCode2 = info.attenuationCode2;
+        this->attenuationCode3 = info.attenuationCode3;
+        this->attenuationCode4 = info.attenuationCode4;
+        this->attenuationCode5 = info.attenuationCode5;
+        this->attenuationCode6 = info.attenuationCode6;
+        this->attenuationCode7 = info.attenuationCode7;
+        this->attenuationCode8 = info.attenuationCode8;
+        this->attenuationCode9 = info.attenuationCode9;
+        this->attenuationCode10 = info.attenuationCode10;
+    }
+    ~StateControl(){}
 
     char workmode;                   /*!< 工作模式 0自检  1频域搜索  2驻留  3空域搜索  4中频采集  5敌我1030  6敌我1090 */
     char workCycles;                 /*!< 工作周期(50ms)   最大1000ms (20) */
@@ -121,11 +168,28 @@ struct StateControl  : public TaskInfo
  */
 struct GatherControl  : public TaskInfo
 {
-    GatherControl ()
+    GatherControl():TaskInfo()
     {
         taskType = Gather;
         extractSwitch = false;
     }
+    GatherControl(const GatherControl & info):TaskInfo(info){
+        this->gatherWay = info.gatherWay;
+        this->gatherType = info.gatherType;
+        this->sendingPause = info.sendingPause;
+        this->extractSwitch = info.extractSwitch;
+        this->gatherTime = info.gatherTime;
+        this->gatherImpulseNumber = info.gatherImpulseNumber;
+        this->gatherFrequencyMin = info.gatherFrequencyMin;
+        this->gatherFrequencyMax = info.gatherFrequencyMax;
+        this->gatherPulseyMin = info.gatherPulseyMin;
+        this->gatherPulseyMax = info.gatherPulseyMax;
+        this->gatherPowerMin = info.gatherPowerMin;
+        this->gatherPowerMax = info.gatherPowerMax;
+        this->gatherTacticsSwitch = info.gatherTacticsSwitch;
+    }
+    ~GatherControl(){}
+
     char gatherWay;                 /*!< 采集方式  0：DDR  1:SATA */
     char gatherType;                /*!< 采集类型  0：盲采  1:Vp采  2：Vp触发盲采 */
     char sendingPause;              /*!< 采集指令(只对SATA有效 0停止 1开始采集 2开始读取 3检索 4读取暂停 5发送暂停 其他：无效 */
@@ -151,11 +215,32 @@ struct GatherControl  : public TaskInfo
  */
 struct SelfCheckControl  : public TaskInfo
 {
-    SelfCheckControl ()
+    SelfCheckControl():TaskInfo()
     {
         taskType = SelfCheck;
         workCyclesNumber = 1;
     }
+    SelfCheckControl(const SelfCheckControl & info):TaskInfo(info){
+        this->workmode = info.workmode;
+        this->workCycles = info.workCycles;
+        this->workCyclesNumber = info.workCyclesNumber;
+        this->workingBandwidth = info.workingBandwidth;
+        this->originFrequency = info.originFrequency;
+        this->stopFrequency = info.stopFrequency;
+        this->frequencyStopping = info.frequencyStopping;
+        this->attenuationCode1 = info.attenuationCode1;
+        this->attenuationCode2 = info.attenuationCode2;
+        this->attenuationCode3 = info.attenuationCode3;
+        this->attenuationCode4 = info.attenuationCode4;
+        this->attenuationCode5 = info.attenuationCode5;
+        this->attenuationCode6 = info.attenuationCode6;
+        this->attenuationCode7 = info.attenuationCode7;
+        this->attenuationCode8 = info.attenuationCode8;
+        this->attenuationCode9 = info.attenuationCode9;
+        this->attenuationCode10 = info.attenuationCode10;
+    }
+    ~SelfCheckControl(){}
+
     char workmode;                   /*!< 工作模式 0自检  1工作 */
     char workCycles;                 /*!< 工作周期(50ms)   最大1000ms (20) */
     short workCyclesNumber;          /*!< 工作周期数  默认为1 */
@@ -182,10 +267,37 @@ struct SelfCheckControl  : public TaskInfo
  */
 struct InstrumentControl  : public TaskInfo
 {
-    InstrumentControl ()
+    InstrumentControl():TaskInfo()
     {
         taskType = Instrument;
     }
+    InstrumentControl(const InstrumentControl & info):TaskInfo(info){
+        this->instrumentType = info.instrumentType;
+        this->instrumentModel = info.instrumentModel;
+        this->instrumentCommType = info.instrumentCommType;
+        memcpy(this->IPAddress,info.IPAddress,64);
+        this->networkPort = info.networkPort;
+        this->GPIBPort = info.GPIBPort;
+        this->signalCarrierFrequency = info.signalCarrierFrequency;
+        this->signalRepetitionPeriod = info.signalRepetitionPeriod;
+        this->signalPulseWidth = info.signalPulseWidth;
+        this->signalPower = info.signalPower;
+        this->radioFrequencySwitchControl = info.radioFrequencySwitchControl;
+        this->intrapulseSwitchControl = info.intrapulseSwitchControl;
+        this->ImpulseSwitchControl = info.ImpulseSwitchControl;
+        this->centreFrequency = info.centreFrequency;
+        this->displayBandwidth = info.displayBandwidth;
+        this->IFBandwidth = info.IFBandwidth;
+        this->videoBandwidth = info.videoBandwidth;
+        this->scanTime = info.scanTime;
+        this->scanPoints = info.scanPoints;
+        this->ifReadspectrumData = info.ifReadspectrumData;
+        this->signalBase = info.signalBase;
+        this->powerCalibrationControl = info.powerCalibrationControl;
+        this->immediatePowerCalibration = info.immediatePowerCalibration;
+    }
+    ~InstrumentControl(){}
+
     short instrumentType;            /*!< 仪器类型  0：信号源  1：频谱仪  2：以上待定 */
     short instrumentModel;           /*!< 仪器型号  0：安捷伦  2：安立  2罗德斯瓦兹  3以上待定 */
     short instrumentCommType;        /*!< 仪器通信类型   0：网络  1：GPIB */
@@ -218,10 +330,19 @@ struct InstrumentControl  : public TaskInfo
  */
 struct TurntableControl  : public TaskInfo
 {
-    TurntableControl ()
+    TurntableControl():TaskInfo()
     {
         taskType = Turntable;
     }
+    TurntableControl(const TurntableControl & info):TaskInfo(info){
+        this->type = info.type;
+        this->position = info.position;
+        this->speed = info.speed;
+        this->directionRotation = info.directionRotation;
+        this->zeroPosSetting = info.zeroPosSetting;
+    }
+    ~TurntableControl(){}
+
     short type;                 /*!< 转台类型  0：类型1  1：类型2... */
     double position;            /*!< 转台位置(度_0-360) */
     double speed;               /*!< 转台速度(度/秒) */
@@ -236,10 +357,18 @@ struct TurntableControl  : public TaskInfo
  */
 struct PlayBackControl  : public TaskInfo
 {
-    PlayBackControl()
+    PlayBackControl():TaskInfo()
     {
         taskType = PlayBack;
     }
+    PlayBackControl(const PlayBackControl & info):TaskInfo(info){
+        memcpy(this->path,info.path,256);
+        this->type = info.type;
+        this->originPos = info.originPos;
+        this->speed = info.speed;
+    }
+    ~PlayBackControl(){}
+
     char path[256];             /*!< 回放文件路径 */
     int type;                   /*!< 回放类型  0辐射源 1全脉冲 2中频采集 3频谱 4设备状态 */
     double originPos;           /*!< 回放起始位置 0~1，表示相对整个文件的比例 */

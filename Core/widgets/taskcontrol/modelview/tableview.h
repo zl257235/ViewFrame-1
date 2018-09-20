@@ -1,4 +1,14 @@
-﻿#ifndef TABLEVIEW_H
+﻿/*!
+ *  @brief     任务显示表格
+ *  @details
+ *  @author    wlc
+ *  @version   1.0
+ *  @date      2018.09.20
+ *  @warning
+ *  @copyright NanJing RenGu.
+ *  @note
+ */
+#ifndef TABLEVIEW_H
 #define TABLEVIEW_H
 
 #include <QObject>

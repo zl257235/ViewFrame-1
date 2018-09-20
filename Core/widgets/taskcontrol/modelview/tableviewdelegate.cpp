@@ -1,10 +1,12 @@
 ﻿#include "TableViewDelegate.h"
 
-#include "QDateTimeEdit"
-#include "QDateTime"
+#include <QDateTimeEdit>
+#include <QDateTime>
+#include <QLineEdit>
 #include <QDebug>
 
 #include "../head.h"
+#include "Base/common/validator/rvalidator.h"
 
 namespace TaskControlModel {
 
@@ -20,66 +22,92 @@ TableViewDelegate::~TableViewDelegate()
 QWidget *TableViewDelegate::createEditor(QWidget *parent,const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
-    if (index.column() == TaskHead::T_E_TIME)
-    {
-        QString value = index.model()->data(index, Qt::DisplayRole).toString();
-        
-        QDateTimeEdit *datetime = new QDateTimeEdit(parent);
-        connect(datetime, SIGNAL(editingFinished()), this, SLOT(commitAndCloseEditor()));
-        datetime->setDisplayFormat("yyyy-MM-dd HH:mm:ss");
-        datetime->setCalendarPopup(true); // 日历弹出
-        datetime->setMaximumDateTime(QDateTime::fromString("6000-12-12 23::59:59","yyyy-MM-dd HH:mm:ss"));
-        datetime->setMinimumDateTime(QDateTime::currentDateTime());
-        datetime->setDateTime(QDateTime::fromString(value,"yyyy-MM-dd HH:mm:ss"));
-        
-        return datetime;
+
+    switch(static_cast<TaskHead>(index.column())){
+        case T_E_TIME:
+            {
+                QDateTimeEdit *datetime = new QDateTimeEdit(parent);
+                return datetime;
+            }
+            break;
+        case T_PARAMETERS:
+        case T_E_TIME_LONG:
+            {
+                QLineEdit * lineEdit = new QLineEdit(parent);
+                return lineEdit;
+            }
+        default:
+            break;
     }
-    else
-        return QItemDelegate::createEditor(parent,option,index);
+    return NULL;
 }
 
 void TableViewDelegate::setEditorData(QWidget *editor,const QModelIndex &index) const
 {
-    if (index.column() == TaskHead::T_E_TIME)
-    {
-        QString value = index.model()->data(index, Qt::DisplayRole).toString();
-        
-        QDateTimeEdit *datetime = static_cast<QDateTimeEdit *>(editor);
-        datetime->setDateTime(QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss"));
+    switch(static_cast<TaskHead>(index.column())){
+        case T_E_TIME:
+            {
+                QDateTimeEdit *datetime = static_cast<QDateTimeEdit *>(editor);
+                if(datetime){
+                    datetime->setDisplayFormat("yyyy-MM-dd hh:mm:ss");
+                    QString value = index.model()->data(index, Qt::DisplayRole).toString();
+                    datetime->setDateTime(QDateTime::fromString(value,"yyyy-MM-dd hh:mm:ss"));
+                }
+            }
+            break;
+        case T_PARAMETERS:
+        case T_E_TIME_LONG:
+            {
+                QLineEdit *lineEdit = static_cast<QLineEdit *>(editor);
+                if(lineEdit){
+                    lineEdit->setStyleSheet("background-color:#0D1A2A;color:white;");
+                    lineEdit->setText(index.model()->data(index, Qt::DisplayRole).toString());
+                }
+            }
+        default:
+            break;
     }
-    else
-        return QItemDelegate::setEditorData(editor,index);
 }
 
 void TableViewDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,const QModelIndex &index) const
 {
-    if (index.column() == TaskHead::T_E_TIME)
-    {
-        QDateTimeEdit *datetime = static_cast<QDateTimeEdit *>(editor);
-        datetime->setDisplayFormat("yyyy-MM-dd HH:mm:ss");
-        
-        model->setData(index, datetime->dateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    switch(static_cast<TaskHead>(index.column())){
+        case T_E_TIME:
+            {
+                QDateTimeEdit *datetime = static_cast<QDateTimeEdit *>(editor);
+                if(datetime){
+                    model->setData(index, datetime->dateTime().toString("yyyy-MM-dd hh:mm:ss"));
+                }
+            }
+            break;
+        case T_PARAMETERS:
+            {
+                QLineEdit *lineEdit = static_cast<QLineEdit *>(editor);
+                if(lineEdit){
+                    model->setData(index, lineEdit->text());
+                }
+                break;
+            }
+        case T_E_TIME_LONG:
+            {
+                QLineEdit *lineEdit = static_cast<QLineEdit *>(editor);
+                if(lineEdit){
+                    RNumericValidator<int> validator(lineEdit->text().toInt(),RValid::Gt,0);
+                    if(validator.validate() == RValid::Acceptable)
+                        model->setData(index, lineEdit->text());
+                }
+                break;
+            }
+        default:
+            break;
     }
-    else
-        return QItemDelegate::setModelData(editor,model,index);
 }
 
 void TableViewDelegate::updateEditorGeometry(QWidget *editor,const QStyleOptionViewItem &option,const QModelIndex &index) const
 {
     Q_UNUSED(index);
-    if (index.column() == TaskHead::T_E_TIME)
-    {
+    if(editor)
         editor->setGeometry(option.rect);
-    }
-    else
-        return QItemDelegate::updateEditorGeometry(editor,option,index);
-}
-
-void TableViewDelegate::commitAndCloseEditor()
-{
-    QDateTimeEdit *datetimeedit = qobject_cast<QDateTimeEdit *>(sender());
-    emit commitData(datetimeedit);
-    emit closeEditor(datetimeedit);
 }
 
 } //namespace TaskControlModel

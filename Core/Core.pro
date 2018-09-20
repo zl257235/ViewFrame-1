@@ -49,7 +49,6 @@ SOURCES += main.cpp \
     widgets/taskcontrol/selfcheckcontroldialog.cpp \
     widgets/taskcontrol/instrumentcontroldialog.cpp \
     widgets/taskcontrol/gathercontroldialog.cpp \
-    widgets/taskcontrol/task.cpp \
     widgets/healthmanage/fileOpt.cpp \
     widgets/healthmanage/healthinfopannel.cpp \
     widgets/healthmanage/healthstate_display.cpp \
@@ -87,7 +86,6 @@ HEADERS  += \
     widgets/taskcontrol/selfcheckcontroldialog.h \
     widgets/taskcontrol/instrumentcontroldialog.h \
     widgets/taskcontrol/gathercontroldialog.h \
-    widgets/taskcontrol/task.h \
     widgets/taskcontrol/head.h \
     widgets/healthmanage/fileOpt.h \
     widgets/healthmanage/healthinfopannel.h \
