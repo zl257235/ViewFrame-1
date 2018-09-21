@@ -10,14 +10,14 @@
 #include "netglobal.h"
 #include "../dataprocess/sockdatahandler.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 WorkThread::WorkThread(SharedIocpData *data):
     serverSharedData(data)
 {
     threadId = (HANDLE)_beginthreadex(nullptr, 0,iocpProc,this, 0, nullptr);
 
-    dataPacketRule = std::make_shared<TCPDataPacketRule>();
+    dataPacketRule = std::make_shared<TCP_IocpDataPacketRule>();
 
     Handler * handler = new SockTextDataHandler();
     dataPacketRule->registDataHandler(handler);
@@ -84,7 +84,7 @@ void WorkThread::handleIo(IocpContext *ioData, unsigned long recvLength, TcpClie
 
 void WorkThread::handleRecv(IocpContext *ioData, unsigned long recvLen, TcpClient* tcpClient)
 {
-    dataPacketRule->bindContext(ioData,recvLen);
+    dataPacketRule->unwrap(ioData,recvLen);
 
     DWORD dwRecv = 0;
     DWORD dwFlags = 0;
@@ -143,4 +143,4 @@ void WorkThread::handleClose(IocpContext *ioData)
     }
 }
 
-}  //namespace ServerNetwork
+}  //namespace Network

@@ -1,5 +1,5 @@
 ﻿/*!
- *  @brief
+ *  @brief     处理网络层解包好的数据
  *  @details
  *  @author    wey
  *  @version   1.0
@@ -12,7 +12,7 @@
 
 #include "handler.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 class SockTextDataHandler : public Handler
 {

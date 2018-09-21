@@ -4,7 +4,7 @@
 
 #include "Base/util/rlog.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 TcpClient *TcpClient::create()
 {
@@ -234,4 +234,4 @@ int TcpClientManager::counts()
     return clientList.size();
 }
 
-}   //namespace ServerNetwork
+}   //namespace Network

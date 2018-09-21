@@ -1,5 +1,5 @@
 ﻿/*!
- *  @brief     服务器端
+ *  @brief     iocp版tcp服务器端
  *  @details   用于接受客户端的请求，负责创建socket、IOCP、处理线程
  *  @file      tcpserver.h
  *  @author    wey
@@ -18,10 +18,10 @@
 #include "../head.h"
 #include "../netglobal.h"
 #include "../connection/tcpclient.h"
+#include "../base/abstractserver.h"
 #include "iocpcontext.h"
-#include "../abstractserver.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class WorkThread;
 class TcpClient;
@@ -66,6 +66,6 @@ private:
     QList<WorkThread *> workThreads;
 };
 
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif // TCPSERVER_H

@@ -1,13 +1,13 @@
-﻿#include "tcpdatapacketrule.h"
+﻿#include "tcp_iocpdatapacketrule.h"
 #include <qmath.h>
 
-#include "../win32net/iocpcontext.h"
+#include "../win32iocp/iocpcontext.h"
 #include "../dataprocess/handler.h"
 
-namespace ServerNetwork{
+namespace Network{
 
-TCPDataPacketRule::TCPDataPacketRule():
-    WrapRule(),handler(nullptr)
+TCP_IocpDataPacketRule::TCP_IocpDataPacketRule():
+    handler(nullptr)
 {
     SendPackId = qrand()%1024 + 1000;
 }
@@ -18,7 +18,7 @@ TCPDataPacketRule::TCPDataPacketRule():
  * @param[in] func 发送数据函数
  * @return 返回是否发送成功
  */
-bool TCPDataPacketRule::wrap(const SendUnit &dataUnit, IocpContextSender sendFunc)
+bool TCP_IocpDataPacketRule::wrap(const SendUnit &dataUnit, IocpContextSender sendFunc)
 {
     TcpClient * client = TcpClientManager::instance()->getClient(dataUnit.sockId);
     if(client != NULL)
@@ -63,12 +63,12 @@ bool TCPDataPacketRule::wrap(const SendUnit &dataUnit, IocpContextSender sendFun
     return false;
 }
 
-void TCPDataPacketRule::registDataHandler(Handler *dataHandler)
+void TCP_IocpDataPacketRule::registDataHandler(Handler *dataHandler)
 {
     handler = dataHandler;
 }
 
-void TCPDataPacketRule::bindContext(IocpContext * context, unsigned long recvLen)
+void TCP_IocpDataPacketRule::unwrap(IocpContext * context, unsigned long recvLen)
 {
     ioContext = context;
 
@@ -96,19 +96,7 @@ void TCPDataPacketRule::bindContext(IocpContext * context, unsigned long recvLen
     }
 }
 
-void TCPDataPacketRule::wrap(ProtocolPackage &data)
-{
-    Q_UNUSED(data)
-}
-
-bool TCPDataPacketRule::unwrap(const QByteArray &data, ProtocolPackage &result)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(result)
-    return false;
-}
-
-void TCPDataPacketRule::recvData(const char * recvData,int recvLen)
+void TCP_IocpDataPacketRule::recvData(const char * recvData,int recvLen)
 {
     DataPacket packet;
     memset((char *)&packet,0,sizeof(DataPacket));

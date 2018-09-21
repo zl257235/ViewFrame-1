@@ -1,6 +1,6 @@
 ﻿#include "wraprule.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 WrapRule::WrapRule()
 {

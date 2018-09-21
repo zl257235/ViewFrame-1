@@ -19,11 +19,11 @@ typedef  int socklen_t;
 
 #include "Base/util/rlog.h"
 
-namespace ServerNetwork {
+namespace Network {
 
-RSocket::RSocket()
+RSocket::RSocket():socktype(R_NONE)
 {
-    tcpSocket = 0;
+    sockFd = 0;
     socketPort = 0;
     errorCode = 0;
     socketValid = false;
@@ -31,7 +31,7 @@ RSocket::RSocket()
     memset(socketIp,0,sizeof(socketIp));
 }
 
-bool RSocket::createSocket()
+bool RSocket::createSocket(SocketType socktype)
 {
 #ifdef Q_OS_WIN
     static bool isInit = false;
@@ -47,8 +47,8 @@ bool RSocket::createSocket()
     }
 #endif
 
-    tcpSocket = socket(AF_INET,SOCK_STREAM,0);
-    if(tcpSocket == INVALID_SOCKET)
+    sockFd = socket(AF_INET,socktype,0);
+    if(sockFd == INVALID_SOCKET)
     {
         errorCode = getErrorCode();
         RLOG_ERROR("Create socket failed! [ErrorCode:%d]",errorCode);
@@ -71,7 +71,7 @@ bool RSocket::bind(const char *ip, unsigned short port)
     saddr.sin_port = htons(port);
     saddr.sin_addr.s_addr = htonl(INADDR_ANY)/*inet_addr(ip)*/;
 
-    int ret = ::bind(tcpSocket,(sockaddr*)&saddr,sizeof(saddr));
+    int ret = ::bind(sockFd,(sockaddr*)&saddr,sizeof(saddr));
     if(ret == SOCKET_ERROR)
     {
         closeSocket();
@@ -86,14 +86,17 @@ bool RSocket::bind(const char *ip, unsigned short port)
     return true;
 }
 
-bool RSocket::listen()
+/*!
+ * @brief 开启socket监听
+ * @param[in] backlog 同一时刻最大允许连接数量
+ * @return 是否监听成功
+ */
+bool RSocket::listen(int backlog)
 {
     if(!isValid())
-    {
         return false;
-    }
 
-    int ret = ::listen(tcpSocket,10);
+    int ret = ::listen(sockFd,backlog);
     if(ret == SOCKET_ERROR)
     {
         closeSocket();
@@ -111,10 +114,10 @@ bool RSocket::closeSocket()
 {
     if(isValid())
     {
-        if(closesocket(tcpSocket) == 0)
+        if(closesocket(sockFd) == 0)
         {
             socketValid = false;
-            tcpSocket = 0;
+            sockFd = 0;
             return true;
         }
 #ifdef Q_OS_WIN
@@ -133,13 +136,12 @@ RSocket RSocket::accept()
 {
     RSocket tmpSocket;
     if(!isValid())
-    {
         return tmpSocket;
-    }
+
     sockaddr_in clientAddr;
     int len = sizeof(clientAddr);
 
-    int clientSocket = ::accept(tcpSocket,(sockaddr*)&clientAddr,(socklen_t*)&len);
+    int clientSocket = ::accept(sockFd,(sockaddr*)&clientAddr,(socklen_t*)&len);
     if(clientSocket == INVALID_SOCKET)
     {
         RLOG_ERROR("Accept failed [ErrorCode:%d]!",GetLastError());
@@ -149,7 +151,8 @@ RSocket RSocket::accept()
     strcpy(tmpSocket.socketIp,inet_ntoa(clientAddr.sin_addr));
     tmpSocket.socketValid = true;
     tmpSocket.socketPort= ntohs(clientAddr.sin_port);
-    tmpSocket.tcpSocket = clientSocket;
+    tmpSocket.sockFd = clientSocket;
+    tmpSocket.socktype = R_TCP;
 
     RLOG_INFO("Recv socket [%s:%d]",tmpSocket.socketIp,tmpSocket.socketPort);
 
@@ -165,14 +168,12 @@ RSocket RSocket::accept()
 int RSocket::recv(char *buff, int length)
 {
     if(!isValid() || buff == NULL)
-    {
         return -1;
-    }
 
     size_t buffLen = strlen(buff);
     memset(buff,0,buffLen);
 
-    int ret = ::recv(tcpSocket,buff,length,0);
+    int ret = ::recv(sockFd,buff,length,0);
 
     return ret;
 }
@@ -186,14 +187,12 @@ int RSocket::recv(char *buff, int length)
 int RSocket::send(const char *buff, const int length)
 {
     if(!isValid() || buff == NULL)
-    {
         return -1;
-    }
 
     int sendLen = 0;
     while(sendLen != length)
     {
-        int ret = ::send(tcpSocket,buff+sendLen,length-sendLen,0);
+        int ret = ::send(sockFd,buff+sendLen,length-sendLen,0);
         if (ret <= 0)
         {
             sendLen = -1;
@@ -214,9 +213,7 @@ int RSocket::send(const char *buff, const int length)
 bool RSocket::connect(const char *remoteIp, const unsigned short remotePort, int timeouts)
 {
     if(!isValid())
-    {
         return false;
-    }
 
     sockaddr_in remoteAddr;
     remoteAddr.sin_family = AF_INET;
@@ -225,15 +222,15 @@ bool RSocket::connect(const char *remoteIp, const unsigned short remotePort, int
 
     setBlock(false);
 
-    if(::connect(tcpSocket,(sockaddr*)&remoteAddr,sizeof(remoteAddr)) != 0)
+    if(::connect(sockFd,(sockaddr*)&remoteAddr,sizeof(remoteAddr)) != 0)
     {
         fd_set set;
         FD_ZERO(&set);
-        FD_SET(tcpSocket,&set);
+        FD_SET(sockFd,&set);
         timeval tm;
         tm.tv_sec = timeouts;
         tm.tv_usec = 0;
-        if(select(tcpSocket+1,0,&set,0,&tm) <= 0)
+        if(select(sockFd+1,0,&set,0,&tm) <= 0)
         {
             RLOG_ERROR("Connect timeout or error [%s:%d] %s ",remoteIp,remotePort,strerror(errno));
             return false;
@@ -253,35 +250,27 @@ bool RSocket::connect(const char *remoteIp, const unsigned short remotePort, int
 bool RSocket::setBlock(bool flag)
 {
     if(!isValid())
-    {
         return false;
-    }
+
 #if defined(Q_OS_WIN)
     unsigned long ul = 0;
     if(!flag)
     {
         ul = 1;
     }
-    ioctlsocket(tcpSocket,FIONBIO,&ul);
+    ioctlsocket(sockFd,FIONBIO,&ul);
 #else defined(Q_OS_LINUX)
-    int flags = fcntl(tcpSocket,F_GETFL,0);
+    int flags = fcntl(sockFd,F_GETFL,0);
     if(flags<0)
-    {
         return false;
-    }
 
     if(flag)
-    {
         flags = flags&~O_NONBLOCK;
-    }
     else
-    {
         flags = flags|O_NONBLOCK;
-    }
-    if(fcntl(tcpSocket,F_SETFL,flags)!=0)
-    {
+
+    if(fcntl(sockFd,F_SETFL,flags)!=0)
         return false;
-    }
 #endif
     return true;
 }
@@ -291,7 +280,7 @@ int RSocket::setSockopt(int optname, const char *optval, int optlen)
     if(!isValid())
         return false;
 
-    return setsockopt(tcpSocket,SOL_SOCKET,optname,optval,optlen);
+    return setsockopt(sockFd,SOL_SOCKET,optname,optval,optlen);
 }
 
 int RSocket::getLastError()
@@ -308,4 +297,4 @@ int RSocket::getErrorCode()
 #endif
 }
 
-}//namespace ServerNetwork
+}//namespace Network

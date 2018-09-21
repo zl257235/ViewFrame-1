@@ -9,22 +9,30 @@
  *  @copyright NanJing RenGu.
  */
 
-#ifndef RSOCKET_H
-#define RSOCKET_H
+#ifndef RSOCKET_H_2018_01_09
+#define RSOCKET_H_2018_01_09
 
 #include "network_global.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class NETWORKSHARED_EXPORT  RSocket
 {
 public:
     RSocket();
 
-    bool createSocket();
+    enum SocketType{
+        R_NONE = 0,
+        R_TCP = 1,          /*!< 创建tcp连接 */
+        R_UDP = 2,          /*!< 创建udp连接 */
+        R_RAW = 3           /*!< 创建原始套接字连接 */
+    };
+
+    bool createSocket(SocketType socktype);
     bool closeSocket();
+
     bool bind(const char * ip,unsigned short port);
-    bool listen();
+    bool listen(int backlog = 20);
     RSocket accept();
 
     unsigned short port(){return socketPort;}
@@ -43,7 +51,8 @@ public:
 
     int getLastError();
 
-    int getSocket()const {return tcpSocket;}
+    int getSocket()const {return sockFd;}
+    SocketType getSocketType()const{return this->socktype;}
 
 private:
     int getErrorCode();
@@ -55,11 +64,12 @@ private:
     bool socketValid;
     bool blockAble;
 
-    int tcpSocket;
-
+    int sockFd;
     int errorCode;
+
+    SocketType socktype;
 };
 
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif // TCPSOCKET_H

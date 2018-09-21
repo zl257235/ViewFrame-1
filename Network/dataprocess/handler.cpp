@@ -1,6 +1,6 @@
 ﻿#include "handler.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 Handler::Handler()
 {

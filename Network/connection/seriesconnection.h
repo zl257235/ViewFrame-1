@@ -21,7 +21,7 @@
 #include "../network_global.h"
 #include "../head.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class SeriesConnectionManager;
 

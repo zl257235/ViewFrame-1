@@ -1,6 +1,6 @@
 ﻿#include "iocpcontext.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 IocpContext::IocpContext()
 {
@@ -35,4 +35,4 @@ void IocpContext::destory(IocpContext *context)
 
 }
 
-} // namespace ServerNetwork
+} // namespace Network

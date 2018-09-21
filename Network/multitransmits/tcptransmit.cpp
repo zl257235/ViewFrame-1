@@ -1,8 +1,7 @@
 ﻿#include "tcptransmit.h"
 
+#include "../base/socket.h"
 #include "Base/util/rlog.h"
-#include "../socket.h"
-#include "../win32net/iocpcontext.h"
 
 #include <QDebug>
 
@@ -10,7 +9,7 @@
 #include <WinSock2.h>
 #endif
 
-namespace ServerNetwork{
+namespace Network{
 
 TcpTransmit::TcpTransmit():
     BaseTransmit(),tcpSocket(nullptr)
@@ -35,9 +34,9 @@ QString TcpTransmit::name()
 
 bool TcpTransmit::initialize()
 {
-    dataPacketRule = std::make_shared<TCPDataPacketRule>();
+    tcpSocket = new RSocket();
+    dataPacketRule = std::make_shared<TCP_ByteDataPacketRule>();
 
-    sendFunc = std::bind(&TcpTransmit::sendIocpData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
     byteSendFunc = std::bind(&TcpTransmit::sendByteData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);
     return true;
 }
@@ -54,34 +53,11 @@ bool TcpTransmit::startTransmit(SendUnit &unit)
     if(!netConnected || unit.method != type())
         return false;
 
-    if(dataPacketRule->wrap(unit,sendFunc))
+    if(dataPacketRule->wrap(unit,byteSendFunc))
         return true;
 
     RLOG_ERROR("Tcp send a data error!");
     return false;
-}
-
-/*!
- * @brief 通过IOCP发送数据
- * @param[in] sockId 目标主机连接sock id
- * @param[in] context 重叠I/O，保存待发送数据信息
- * @param[in] sendLength 实际发送数据长度
- * @return 是否发送成功
- */
-bool TcpTransmit::sendIocpData(int sockId,IocpContext * context,DWORD & sendLength)
-{
-    DWORD sendFlags = 0;
-
-    if(WSASend(sockId, &context->getWSABUF(), 1, &sendLength, sendFlags, &context->getOverLapped(), NULL) == SOCKET_ERROR)
-    {
-        int error = WSAGetLastError();
-        if(error != ERROR_IO_PENDING){
-            //TODO 对错误进行处理
-qDebug()<<__FILE__<<__LINE__<<__FUNCTION__<<"writeError!";
-            return false;
-        }
-    }
-    return true;
 }
 
 /*!
@@ -110,16 +86,16 @@ int TcpTransmit::sendByteData(int sockId,const char * buff,const int length)
     return sendLen;
 }
 
-bool TcpTransmit::startRecv(char *recvBuff, int recvBuffLen, ByteArrayHandler recvDataFunc)
+bool TcpTransmit::startRecv(char *recvBuff, int recvBuffLen, DataHandler recvDataFunc)
 {
     int recvLen = tcpSocket->recv(recvBuff,recvBuffLen);
     if(recvLen > 0)
     {
-//        if(!dataPacketRule->unwrap(QByteArray(recvBuff,recvLen),recvDataFunc)){
-//            RLOG_ERROR("Tcp socket parse error! %d",tcpSocket->getLastError());
-//        }else{
-//            return true;
-//        }
+        if(!dataPacketRule->unwrap(recvBuff,recvLen,recvDataFunc)){
+            RLOG_ERROR("Tcp socket parse error! %d",tcpSocket->getLastError());
+        }else{
+            return true;
+        }
     }
     else if(recvLen == 0)
     {
@@ -164,8 +140,7 @@ bool TcpTransmit::connect(const char *remoteIp, const unsigned short remotePort,
         return false;
 
     if(!netConnected){
-
-        if(!tcpSocket->isValid() && tcpSocket->createSocket())
+        if(!tcpSocket->isValid() && tcpSocket->createSocket(RSocket::R_TCP))
         {
             int timeout = 3000;
             tcpSocket->setSockopt(SO_RCVTIMEO,(char *)&timeout,sizeof(timeout));
@@ -183,4 +158,4 @@ bool TcpTransmit::connect(const char *remoteIp, const unsigned short remotePort,
     return netConnected;
 }
 
-}
+} //namespace Network

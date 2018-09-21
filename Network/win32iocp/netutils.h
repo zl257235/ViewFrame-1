@@ -14,7 +14,7 @@
 #include "SharedIocpData.h"
 #include "../netglobal.h"
 
-namespace ServerNetwork {
+namespace Network {
 namespace NetUtil {
 
     NETWORKSHARED_EXPORT void postRecv(IocpContext *ioData);
@@ -27,6 +27,6 @@ namespace NetUtil {
 
 
 }   //namespace NetUtil
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif // NETUTILS_H

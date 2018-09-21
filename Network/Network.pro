@@ -28,50 +28,56 @@ CONFIG(debug, debug|release) {
   }
 }
 
+INCLUDEPATH += $$PWD/../../ViewFrame/
+
 HEADERS += \
     netglobal.h \
     network_global.h \
-    win32net/tcpserver.h \
-    win32net/SharedIocpData.h \
     head.h \
-    win32net/workthread.h \
-    win32net/netutils.h \
-    win32net/iopacket.h \
-    win32net/iocpcontext.h \
-    socket.h \
-    abstractserver.h \
     multitransmits/basetransmit.h \
-    multitransmits/tcptransmit.h \
     dataprocess/handler.h \
     dataprocess/sockdatahandler.h \
     connection/seriesconnection.h \
     connection/tcpclient.h \
-    wraprule/tcpdatapacketrule.h \
     wraprule/wraprule.h \
-    multitransmits/transmits.h
+    multitransmits/transmits.h \
+    base/abstractserver.h \
+    base/socket.h \
+    wraprule/tcp_iocpdatapacketrule.h \
+    multitransmits/tcptransmit.h \
+    wraprule/tcp_bytedatapacketrule.h
 
 SOURCES += \
     netglobal.cpp \
-    win32net/SharedIocpData.cpp \
-    win32net/workthread.cpp \
-    win32net/netutils.cpp \
-    win32net/tcpserver.cpp \
-    win32net/iopacket.cpp \
-    win32net/iocpcontext.cpp \
-    socket.cpp \
-    abstractserver.cpp \
     multitransmits/basetransmit.cpp \
-    multitransmits/tcptransmit.cpp \
     dataprocess/handler.cpp \
     dataprocess/sockdatahandler.cpp \
     connection/seriesconnection.cpp \
     connection/tcpclient.cpp \
-    wraprule/tcpdatapacketrule.cpp \
     wraprule/wraprule.cpp \
-    multitransmits/transmits.cpp
-
-INCLUDEPATH += $$PWD/../../ViewFrame/
+    multitransmits/transmits.cpp \
+    base/abstractserver.cpp \
+    base/socket.cpp \
+    wraprule/tcp_iocpdatapacketrule.cpp \
+    multitransmits/tcptransmit.cpp \
+    wraprule/tcp_bytedatapacketrule.cpp
 
 win32-msvc2013{
+    HEADERS+=   win32iocp/tcpserver.h \
+        win32iocp/SharedIocpData.h \
+        win32iocp/workthread.h \
+        win32iocp/netutils.h \
+        win32iocp/iopacket.h \
+        win32iocp/iocpcontext.h \
+        multitransmits/iocptransmit.h
+
+    SOURCES += win32iocp/SharedIocpData.cpp \
+        win32iocp/workthread.cpp \
+        win32iocp/netutils.cpp \
+        win32iocp/tcpserver.cpp \
+        win32iocp/iopacket.cpp \
+        win32iocp/iocpcontext.cpp \
+        multitransmits/iocptransmit.cpp
+
     LIBS+= -L../Lib/ -lBase
 }

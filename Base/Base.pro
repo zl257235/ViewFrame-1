@@ -1,5 +1,9 @@
 QT       += core widgets xml
-QT       += sql axcontainer
+QT       += sql
+
+win32-msvc2013{
+QT       += axcontainer
+}
 
 CONFIG += c++11
 

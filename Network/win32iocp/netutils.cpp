@@ -7,7 +7,7 @@
 #include "SharedIocpData.h"
 #include "tcpserver.h"
 
-namespace ServerNetwork {
+namespace Network {
 namespace NetUtil {
 
 /*!
@@ -84,4 +84,4 @@ bool send(SOCKET dest, const char *data, int length)
 
 
 }   //namespace NetUtil
-}   //namespace ServerNetwork
+}   //namespace Network

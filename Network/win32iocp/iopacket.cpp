@@ -1,6 +1,6 @@
 ﻿#include "iopacket.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 IOPacket *IOPacket::create(SOCKET sock, const char *src, const int length)
 {
@@ -29,4 +29,4 @@ IOPacket::IOPacket():m_sock(INVALID_SOCKET),m_size(0)
 
 }
 
-} //namespace ServerNetwork
+} //namespace Network

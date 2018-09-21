@@ -12,6 +12,8 @@
 #define HEAD_H
 
 #include <QByteArray>
+#include <QLinkedList>
+#include <functional>
 
 #ifdef Q_OS_WIN
 #include <WinSock2.h>
@@ -33,6 +35,18 @@
 #define RECV_MAGIC_NUM 0x7DBCD6AC
 #define SEND_MAGIC_NUM 0xD7CB6DCA
 
+typedef int(*Func)(const char *,const int);
+typedef std::function<void(QByteArray &)> ByteArrayHandler;
+
+namespace Network{
+class IocpContext;
+}
+//(socketfd,content,len)
+typedef std::function<bool(int,Network::IocpContext *,DWORD &)> IocpContextSender;
+
+//(socketfd,buff,len)
+typedef std::function<int(int,const char*,int)> ByteSender;
+
 #pragma pack(push)
 #pragma pack(1)
 
@@ -48,6 +62,64 @@ struct DataPacket
     unsigned int totalIndex;                 /*!< 总帧数量 */
     unsigned int currentLen;                 /*!< 当前数据长度 */
     unsigned int totalLen;                   /*!< 总数据长度 */
+};
+
+
+/*!
+ *  @brief 数据包接收缓冲
+ *  @details 可用于接收断包数据
+ */
+struct PacketBuff
+{
+    PacketBuff()
+    {
+        totalPackIndex = 0;
+        recvPackIndex = 0;
+        recvSize = 0;
+        isCompleted = false;
+    }
+
+    /*!
+     * @brief 获取缓存接收的分段数据
+     * @note 将缓存接收的数据重新组装，拼接成新的数据；并在拼接后的数据头部插入协议头(21+2051) \n
+     * @param[in] container 数据容器
+     * @param[in] perPacketOffset 截取每个分段的起始点
+     */
+    void packDataWidthPrtocol(QByteArray & container,int perPacketOffset){
+        if(isCompleted && recvSize > 0)
+        {
+            if(buff.size() > 0){
+                container.append(buff.takeFirst());
+            }
+
+            while(!buff.isEmpty())
+            {
+                container.append(buff.takeFirst().mid(perPacketOffset));
+            }
+        }
+    }
+
+    QByteArray getFullData()
+    {
+        QByteArray data;
+        if(isCompleted && recvSize > 0)
+        {
+            while(!buff.isEmpty())
+            {
+                data.append(buff.takeFirst());
+            }
+        }
+        return data;
+    }
+
+    bool isCompleted;                           //该缓冲数据是否完整
+    unsigned int recvSize;                      //接收数据的长度
+    unsigned short totalPackIndex;              //总数据包分包大小
+    unsigned short recvPackIndex;               //已经接收到数据的索引，在recvPackIndex==totalPackIndex时由处理线程进行重新组包
+
+    qint64 totalPackLen;                        /*!< 总数据长度(分片数量*495+数据部分) */
+
+    QLinkedList<QByteArray> buff;               //存放接收到数据(不包含网络数据头DataPacket)，插入时recvPackIndex+1
 };
 
 /*!
@@ -120,6 +192,8 @@ struct RecvUnit
     ExtendData extendData;      /*!< 可扩充数据信息，包含网络层相关信息 */
     QByteArray data;            /*!< 请求数据内容，已经去除网络层( @link DataPacket @endlink )数据头，但其它应用层的数据格式头没有去除 */
 };
+
+typedef std::function<void(RecvUnit &)> DataHandler;
 
 #pragma pack(pop)
 

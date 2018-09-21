@@ -16,7 +16,7 @@
 #include "../connection/tcpclient.h"
 #include "iopacket.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 /*!
  *  @brief ICOP请求类型
@@ -57,6 +57,6 @@ private:
     char dataBuff[MAX_RECV_SIZE];
 };
 
-}// namespace ServerNetwork
+}// namespace Network
 
 #endif // IOEVENT_H

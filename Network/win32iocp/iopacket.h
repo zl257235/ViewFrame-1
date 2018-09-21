@@ -14,7 +14,7 @@
 #include "../head.h"
 #include "../network_global.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class NETWORKSHARED_EXPORT IOPacket
 {
@@ -35,6 +35,6 @@ private:
     char m_buff[IO_BUFF_SIZE];
 };
 
-} //namespace ServerNetwork
+} //namespace Network
 
 #endif // IOPACKET_H

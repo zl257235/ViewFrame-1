@@ -3,20 +3,20 @@
 #if defined(Q_OS_WIN)
 
 #include "netglobal.h"
-#include "win32net/workthread.h"
-#include "win32net/SharedIocpData.h"
+#include "win32iocp/workthread.h"
+#include "win32iocp/SharedIocpData.h"
+#include "win32iocp/netutils.h"
 
 #include <process.h>
 
 #include "Base/util/rlog.h"
 #include "connection/tcpclient.h"
-#include "win32net/netutils.h"
 
 #pragma comment(lib,"Mswsock.lib")
 #pragma comment(lib, "odbc32.lib")
 #pragma comment(lib, "odbccp32.lib")
 
-namespace ServerNetwork {
+namespace Network {
 
 TcpServer  * TcpServer::serverInstance = NULL;
 
@@ -58,7 +58,6 @@ bool TcpServer::startMe(const char *ip, unsigned short port)
             {
                 if(startAccept())
                 {
-
                     return true;
                 }
             }
@@ -70,7 +69,7 @@ bool TcpServer::startMe(const char *ip, unsigned short port)
 
 bool TcpServer::createListenSocket(const char *ip, unsigned short port)
 {
-    if(!m_sharedIocpData->m_listenSock.createSocket())
+    if(!m_sharedIocpData->m_listenSock.createSocket(RSocket::R_TCP))
     {
          RLOG_ERROR("Server socket create error!");
          return false;
@@ -134,6 +133,6 @@ bool TcpServer::startAccept()
     return true;
 }
 
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif

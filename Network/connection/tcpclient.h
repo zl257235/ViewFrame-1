@@ -25,7 +25,7 @@
 #include "../network_global.h"
 #include "../head.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 //数据包接收缓冲
 struct PacketBuff
@@ -411,6 +411,6 @@ private:
     std::mutex mutex;
 };
 
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif // TCPCLIENT_H

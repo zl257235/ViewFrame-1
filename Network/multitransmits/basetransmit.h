@@ -16,7 +16,7 @@
 #include <functional>
 #include <memory>
 
-namespace ServerNetwork{
+namespace Network{
 
 class NETWORKSHARED_EXPORT BaseTransmit
 {
@@ -26,21 +26,19 @@ public:
 
     //生命周期
     virtual bool initialize() = 0;
-    virtual bool startTransmit(SendUnit & unit) = 0;
-    virtual bool startRecv(char * recvBuff,int recvBuffLen,ByteArrayHandler recvDataFunc) = 0;
+    virtual bool startTransmit(SendUnit & /*unit*/){return true;}
+    virtual bool startRecv(char * /*recvBuff*/,int /*recvBuffLen*/,DataHandler /*recvDataFunc*/){return true;}
     virtual bool close() = 0;
 
     virtual CommMethod type() = 0;
     virtual QString name() = 0;
 
     bool connected();
-
 protected:
     bool netConnected;
 };
 
 }
-
-typedef std::shared_ptr<ServerNetwork::BaseTransmit> BaseTransmitPtr;
+typedef std::shared_ptr<Network::BaseTransmit> BaseTransmitPtr;
 
 #endif // BASETRANSMIT_H

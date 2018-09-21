@@ -1,10 +1,10 @@
 ﻿#include "abstractserver.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 AbstractServer::AbstractServer()
 {
 
 }
 
-} //namespace ServerNetwork
+} //namespace Network

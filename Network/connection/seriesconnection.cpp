@@ -2,7 +2,7 @@
 
 #include "Base/util/rlog.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 SeriesConnection::SeriesConnection():
     cPort(0),cSocket(0)

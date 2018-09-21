@@ -12,7 +12,7 @@
 
 #include "../head.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 class Handler
 {

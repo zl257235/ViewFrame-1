@@ -1,6 +1,6 @@
 ﻿#include "basetransmit.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 BaseTransmit::BaseTransmit():netConnected(false)
 {

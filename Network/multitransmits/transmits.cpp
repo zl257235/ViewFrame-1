@@ -1,6 +1,6 @@
 ﻿#include "transmits.h"
 
-namespace ServerNetwork{
+namespace Network{
 
 Transmits::Transmits(){
 

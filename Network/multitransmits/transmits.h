@@ -16,7 +16,7 @@
 #include <mutex>
 #include <functional>
 
-namespace ServerNetwork{
+namespace Network{
 
 /*!
  *  @brief 传输方式管理

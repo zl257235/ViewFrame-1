@@ -12,10 +12,10 @@
 #define SHAREDIOCPDATA_H
 
 #include "../head.h"
+#include "../base/socket.h"
 #include "iocpcontext.h"
-#include "../socket.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class TcpClientManager;
 
@@ -33,6 +33,6 @@ public:
     TcpClientManager * m_clientManager;         /*!< 客户端管理 */
 };
 
-}//namespace ServerNetwork
+}//namespace Network
 
 #endif // IOCPDATA_H

@@ -1,6 +1,6 @@
 ﻿#include "SharedIocpData.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 SharedIocpData::SharedIocpData():
     m_iocpContext(NULL)
@@ -17,4 +17,4 @@ void SharedIocpData::crateIocpContext()
     }
 }
 
-}//namespace ServerNetwork
+}//namespace Network

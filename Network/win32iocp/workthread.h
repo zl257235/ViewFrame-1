@@ -17,9 +17,9 @@
 
 #include <memory>
 
-#include "../wraprule/tcpdatapacketrule.h"
+#include "../wraprule/tcp_iocpdatapacketrule.h"
 
-namespace ServerNetwork {
+namespace Network {
 
 class TcpClient;
 
@@ -41,10 +41,10 @@ private:
     HANDLE threadId;
     SharedIocpData * serverSharedData;
 
-    std::shared_ptr<TCPDataPacketRule> dataPacketRule;
+    std::shared_ptr<TCP_IocpDataPacketRule> dataPacketRule;
 
 };
 
-}   //namespace ServerNetwork
+}   //namespace Network
 
 #endif // WORKTHREAD_H

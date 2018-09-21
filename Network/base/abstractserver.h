@@ -11,7 +11,7 @@
 #ifndef ABSTRACTSERVER_H
 #define ABSTRACTSERVER_H
 
-namespace ServerNetwork {
+namespace Network {
 
 class AbstractServer
 {
@@ -22,6 +22,6 @@ public:
 
 };
 
-} //namespace ServerNetwork
+} //namespace Network
 
 #endif // ABSTRACTSERVER_H
