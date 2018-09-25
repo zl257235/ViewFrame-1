@@ -45,7 +45,9 @@ HEADERS += \
     base/socket.h \
     wraprule/tcp_iocpdatapacketrule.h \
     multitransmits/tcptransmit.h \
-    wraprule/tcp_bytedatapacketrule.h
+    wraprule/tcp_bytedatapacketrule.h \
+    multitransmits/udptransmit.h \
+    wraprule/udp_bytedatapacketrule.h
 
 SOURCES += \
     netglobal.cpp \
@@ -60,7 +62,9 @@ SOURCES += \
     base/socket.cpp \
     wraprule/tcp_iocpdatapacketrule.cpp \
     multitransmits/tcptransmit.cpp \
-    wraprule/tcp_bytedatapacketrule.cpp
+    wraprule/tcp_bytedatapacketrule.cpp \
+    multitransmits/udptransmit.cpp \
+    wraprule/udp_bytedatapacketrule.cpp
 
 win32-msvc2013{
     HEADERS+=   win32iocp/tcpserver.h \

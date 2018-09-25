@@ -37,6 +37,7 @@ public:
 
     unsigned short port(){return socketPort;}
 
+    /*!< TCP */
     int recv(char * buff,int length);
     int send(const char * buff,const int length);
 
@@ -44,6 +45,10 @@ public:
 
     bool setBlock(bool flag);
     bool isBock(){return blockAble;}
+
+    /*!< UDP */
+    int recvFrom(char * buff,int length);
+    int sendTo(const char * buff,const int length,const char * dest,const int port);
 
     int setSockopt(int optname,const char * optval,int optlen);
 
@@ -68,6 +73,8 @@ private:
     int errorCode;
 
     SocketType socktype;
+
+    sockaddr_in localAddr;
 };
 
 }   //namespace Network

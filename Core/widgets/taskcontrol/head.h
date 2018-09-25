@@ -389,6 +389,13 @@ struct pendingTaskState
     QString ExcutionTime;       /*!< 下发时间 */
 };
 
+/***********任务下发配置信息*********/
+struct TaskConfigInfo{
+    QString hostIp;
+    ushort hostPort;
+};
+
+
 } // namespace TaskControlModel
 
 #endif // TASK_CONTROL_HEAD_H

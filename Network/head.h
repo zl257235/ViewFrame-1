@@ -47,6 +47,9 @@ typedef std::function<bool(int,Network::IocpContext *,DWORD &)> IocpContextSende
 //(socketfd,buff,len)
 typedef std::function<int(int,const char*,int)> ByteSender;
 
+//(socketfd,buff,len)
+typedef std::function<int(const char*,int,const char *,int)> UDPByteSender;
+
 #pragma pack(push)
 #pragma pack(1)
 

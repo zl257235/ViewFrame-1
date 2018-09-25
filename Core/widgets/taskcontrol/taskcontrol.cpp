@@ -24,17 +24,18 @@
 #include "selfcheckcontroldialog.h"
 #include "instrumentcontroldialog.h"
 #include "gathercontroldialog.h"
+#include "net/taskdispatcher.h"
 
 namespace TaskControlModel {
 
 const char ACTION_TYPE[] = "ActionType";
+bool IsDistributing;            /*!< 是否正在下发任务 */
 
 class TaskControlPrivate
 {
     Q_DECLARE_PUBLIC(TaskControl)
 public:
-    explicit TaskControlPrivate(TaskControl * q):q_ptr(q),cacheTaskInfo(NULL),isDistributing(false),distributeTimer(NULL)
-        ,hasDistriCount(0)
+    explicit TaskControlPrivate(TaskControl * q):q_ptr(q),cacheTaskInfo(NULL),taskDispatcher(NULL)
     {
         initTableView();
         initTableViewMenu();
@@ -50,6 +51,7 @@ public:
     TableViewDelegate * taskViewDelegate;
 
     QPushButton * distrbuteButt;
+    QPushButton * resetButt;
     QWidget * m_centralWidget;
 
     QWidget * mainWidget;
@@ -57,10 +59,7 @@ public:
     TaskInfoList taskInfoList;          /*!< 任务集合 */
     QPoint contextPoint;                /*!< 表格右键事件菜单 */
     TaskInfo * cacheTaskInfo;           /*!< 复制的任务信息 */
-
-    int hasDistriCount;                 /*!< 已经下发的数量 */
-    bool isDistributing;
-    QTimer * distributeTimer;           /*!< 下发定时器 */
+    TaskDispatcher * taskDispatcher;    /*!< 任务下发 */
 
     QAction *bandAction;
     QAction *stateAction;
@@ -88,11 +87,17 @@ void TaskControlPrivate::initView()
     distrbuteButt->setMinimumWidth(120);
     distrbuteButt->setFixedHeight(26);
 
+    resetButt = new QPushButton(mainWidget);
+    QObject::connect(resetButt, SIGNAL(pressed()), q_ptr, SLOT(resetTask()));
+    resetButt->setMinimumWidth(120);
+    resetButt->setFixedHeight(26);
+
     QWidget * toolWidget = new QWidget;
     QHBoxLayout * hlayout = new QHBoxLayout;
     hlayout->setContentsMargins(2,2,2,2);
     hlayout->addStretch(1);
     hlayout->addWidget(distrbuteButt);
+    hlayout->addWidget(resetButt);
     hlayout->addStretch(1);
     toolWidget->setLayout(hlayout);
 
@@ -191,6 +196,7 @@ void TaskControlPrivate::initTableViewMenu()
 TaskControl::TaskControl(QWidget *parent) :
     QWidget(parent),d_ptr(new TaskControlPrivate(this))
 {
+    IsDistributing = false;
     retranslateUi();
     RSingleton<Base::Subject>::instance()->attach(this);
 }
@@ -216,11 +222,13 @@ void TaskControl::retranslateUi()
     d->copyAction->setText(QObject::tr("Copy task"));
     d->pasteAction->setText(QObject::tr("Paste task"));
 
-    if(!d->isDistributing){
+    if(!IsDistributing){
         d->distrbuteButt->setText(QObject::tr("Issued task"));
     }else{
-        d->distrbuteButt->setText(QObject::tr("Stop issued"));
+        d->distrbuteButt->setText(QObject::tr("Suspend issued"));
     }
+
+    d->resetButt->setText(QObject::tr("Reset issued"));
 }
 
 void TaskControl::onMessage(MessageType::MessType type)
@@ -245,34 +253,49 @@ void TaskControl::distributeTask()
         return;
     }
 
-    if(d->distributeTimer == NULL){
-        d->distributeTimer = new QTimer;
-        d->distributeTimer->setInterval(1000);
-        connect(d->distributeTimer,SIGNAL(timeout()),this,SLOT(checkDistributeTask()));
-    }
+    initDispatch();
 
-    if(d->isDistributing){
-        d->distributeTimer->stop();
-    }else{
-        d->distributeTimer->start();
-    }
-    d->isDistributing = !d->isDistributing;
+    d->resetButt->setEnabled(IsDistributing);
+    IsDistributing = !IsDistributing;
     retranslateUi();
+
+    if(IsDistributing){
+        d->taskDispatcher->bindTaskList(d->taskInfoList);
+        d->taskDispatcher->startDispatch();
+    }else{
+        d->taskDispatcher->pauseDispatch();
+    }
 }
 
-/*!
- * @brief 定时下发任务
- * @details 按照每个任务的执行时间，通过定时器的方式将其下发; \p
- *          每个任务只下发一次，按照任务创建的顺序依次下发: \p
- *          1.若当前任务的执行时间早于程序执行时间，则提示下发错误； \p
- *          2.下发按照任务列表和绝对时间下发 \p
- *          3.
- */
-void TaskControl::checkDistributeTask()
+void TaskControl::resetTask()
 {
     Q_D(TaskControl);
+    initDispatch();
+    d->taskDispatcher->resetDispatch();
+}
 
-    //TODO 20180920 待添加下发代码
+void TaskControl::initDispatch()
+{
+    Q_D(TaskControl);
+    if(d->taskDispatcher == NULL){
+        d->taskDispatcher = new TaskDispatcher;
+        connect(d->taskDispatcher,SIGNAL(taskDispatch()),this,SLOT(updateTaskState()));
+        connect(d->taskDispatcher,SIGNAL(dispatchFinished()),this,SLOT(dispatchOver()));
+    }
+}
+
+void TaskControl::updateTaskState()
+{
+    Q_D(TaskControl);
+    d->taskViewModel->updateTaskList(d->taskInfoList);
+}
+
+void TaskControl::dispatchOver()
+{
+    Q_D(TaskControl);
+    IsDistributing = false;
+    d->resetButt->setEnabled(true);
+    retranslateUi();
 }
 
 /*!
@@ -283,11 +306,6 @@ void TaskControl::tableContextPoint(QPoint point)
 {
     Q_D(TaskControl);
     d->contextPoint = point;
-}
-
-void TaskControl::initNetWork()
-{
-    //    m_InterNetWork = new NetworkInterface(this);
 }
 
 /*!

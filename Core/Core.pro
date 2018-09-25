@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui xml charts
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -64,7 +65,8 @@ SOURCES += main.cpp \
     widgets/datadisplay/radiationsourcetable.cpp \
     widgets/datadisplay/spectrumgraphics.cpp \
     widgets/datadisplay/table.cpp \
-    widgets/datadisplay/datadisplaypanel.cpp
+    widgets/datadisplay/datadisplaypanel.cpp \
+    widgets/taskcontrol/net/taskdispatcher.cpp
 
 HEADERS  += \
     widgets/mainwindow.h \
@@ -103,7 +105,8 @@ HEADERS  += \
     widgets/datadisplay/radiationsourcetable.h \
     widgets/datadisplay/spectrumgraphics.h \
     widgets/datadisplay/table.h \
-    widgets/datadisplay/datadisplaypanel.h
+    widgets/datadisplay/datadisplaypanel.h \
+    widgets/taskcontrol/net/taskdispatcher.h
 
 FORMS    += mainwindow.ui \
     widgets/taskcontrol/gathercontroldialog.ui \

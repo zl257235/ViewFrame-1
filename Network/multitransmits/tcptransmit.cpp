@@ -12,9 +12,9 @@
 namespace Network{
 
 TcpTransmit::TcpTransmit():
-    BaseTransmit(),tcpSocket(nullptr)
+    BaseTransmit()
 {
-
+    tcpSocket = new RSocket();
 }
 
 TcpTransmit::~TcpTransmit()
@@ -34,7 +34,6 @@ QString TcpTransmit::name()
 
 bool TcpTransmit::initialize()
 {
-    tcpSocket = new RSocket();
     dataPacketRule = std::make_shared<TCP_ByteDataPacketRule>();
 
     byteSendFunc = std::bind(&TcpTransmit::sendByteData,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3);

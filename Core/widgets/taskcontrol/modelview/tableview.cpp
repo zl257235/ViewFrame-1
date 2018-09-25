@@ -10,6 +10,8 @@
 
 namespace TaskControlModel{
 
+extern bool IsDistributing;            /*!< 是否正在下发任务 */
+
 class TableViewPrivate
 {
     Q_DECLARE_PUBLIC(TableView)
@@ -57,7 +59,7 @@ void TableView::addAction(QAction *action)
 void TableView::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_D(TableView);
-    if(d->m_Menu){
+    if(d->m_Menu && !IsDistributing){
         emit contextMenuPos(event->pos());
         d->m_Menu->exec(cursor().pos());
     }

@@ -62,16 +62,13 @@ bool RSocket::createSocket(SocketType socktype)
 bool RSocket::bind(const char *ip, unsigned short port)
 {
     if(!isValid())
-    {
         return false;
-    }
 
-    sockaddr_in saddr;
-    saddr.sin_family = AF_INET;
-    saddr.sin_port = htons(port);
-    saddr.sin_addr.s_addr = htonl(INADDR_ANY)/*inet_addr(ip)*/;
+    localAddr.sin_family = AF_INET;
+    localAddr.sin_port = htons(port);
+    localAddr.sin_addr.s_addr = htonl(INADDR_ANY)/*inet_addr(ip)*/;
 
-    int ret = ::bind(sockFd,(sockaddr*)&saddr,sizeof(saddr));
+    int ret = ::bind(sockFd,(sockaddr*)&localAddr,sizeof(localAddr));
     if(ret == SOCKET_ERROR)
     {
         closeSocket();
@@ -273,6 +270,61 @@ bool RSocket::setBlock(bool flag)
         return false;
 #endif
     return true;
+}
+
+/*!
+ * @brief UDP数据接收
+ * @param[in] buff  char * 接收的数据缓冲区
+ * @param[in] length  int  接收的数据长度
+ * @return 实际接收数据的长度
+ */
+int RSocket::recvFrom(char *buff, int length)
+{
+    if(!isValid())
+        return -1;
+
+    int fromlen = sizeof(sockaddr);
+    int recvLen = ::recvfrom(sockFd,buff,length,0,(sockaddr *)&localAddr,&fromlen);
+    if(recvLen < 0){
+#ifdef Q_OS_WIN
+        RLOG_ERROR("Recv socket error [ErrorCode:%d]!",GetLastError());
+#endif
+        return -1;
+    }
+    return recvLen;
+}
+
+/*!
+ * @brief UDP数据发送
+ * @param[in] buff char* 待发送数据缓冲区
+ * @param[in] length int 待发送数据长度
+ * @param[in] dest char* 目的地址
+ * @param[in] port int   目的端口号
+ * @return 实际发送数据长度
+ */
+int RSocket::sendTo(const char *buff, const int length, const char *dest, const int port)
+{
+    if(!isValid())
+        return -1;
+
+    sockaddr_in raddr;
+    raddr.sin_family = AF_INET;
+    raddr.sin_port = htonl(port);
+    raddr.sin_addr.s_addr = inet_addr(dest);
+
+    int sendLen = 0;
+    while(sendLen != length)
+    {
+        int ret = ::sendto(sockFd,buff,length,0,(sockaddr*)&raddr,sizeof(sockaddr_in));
+        if (ret <= 0)
+        {
+            sendLen = -1;
+            break;
+        }
+        sendLen += ret;
+    }
+
+    return sendLen;
 }
 
 int RSocket::setSockopt(int optname, const char *optval, int optlen)

@@ -44,14 +44,18 @@ private slots:
 
     void addNewTask();          /*!< 添加任务 */
     void distributeTask();      /*!< 下发任务 */
-    void checkDistributeTask();
+    void resetTask();           /*!< 重置任务状态 */
+
+    void updateTaskState();
+    void dispatchOver();
 
     void tableContextPoint(QPoint point);
 
 private:
-    void initNetWork();
     QModelIndex currentIndex(bool &validIndex);
     void showEditWindow(QModelIndex index);
+
+    void initDispatch();
 
     template<class T>
     bool executeCopy(TaskInfo * selectedTask);
