@@ -1,14 +1,4 @@
-﻿/*!
- *  @brief     表格单元格修改代理
- *  @details
- *  @author    wlc
- *  @version   1.0
- *  @date      2018.09.20
- *  @warning
- *  @copyright NanJing RenGu.
- *  @note
- */
-#ifndef TableViewDelegate_H
+﻿#ifndef TableViewDelegate_H
 #define TableViewDelegate_H
 
 #include <QItemDelegate>
@@ -35,6 +25,8 @@ public:
                               const QStyleOptionViewItem &option,
                               const QModelIndex &index) const;
     
+private slots:
+    void commitAndCloseEditor();
 };
 
 } //namespace TaskControlModel

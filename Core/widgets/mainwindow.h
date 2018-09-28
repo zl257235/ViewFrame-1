@@ -16,6 +16,10 @@
 class QAction;
 
 #include "Base/pluginmanager/observer.h"
+#include "Network/NetworkInterface.h"
+#include "datadisplay/radiationsourcetable.h"
+#include "datadisplay/allplusetable.h"
+#include "datadisplay/mfacquistiontable.h"
 
 namespace Ui {
 class MainWindow;
@@ -49,12 +53,15 @@ private slots:
     void technicalSupport();
     void aboutProgram();
 
+    void recvTranst(int iLen);
 private:
     void initComponent();
     void updateStyle(int index);
     void updateLanguage(QString lanFileName);
     void retranslateUi();
-
+    void initNetwork();
+public:
+    NetworkInterface* networkInterface;
 private:
     Ui::MainWindow *ui;
 
@@ -73,6 +80,10 @@ private:
     QAction * fullScreenAction;
     QAction * supportAction;
     QAction * aboutPorgramAction;
+
+    DataView::RadiationSourceTable * radiationTable;
+    DataView::AllPluseTable * allPluseTable;
+    DataView::MFAcquistionTable * acquistionTable;
 
 };
 

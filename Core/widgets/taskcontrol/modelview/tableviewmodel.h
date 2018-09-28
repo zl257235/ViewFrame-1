@@ -1,21 +1,11 @@
-﻿/*!
- *  @brief     表格数据模型
- *  @details
- *  @author    wlc
- *  @version   1.0
- *  @date      2018.09.20
- *  @warning
- *  @copyright NanJing RenGu.
- *  @note
- */
-#ifndef TABLEVIEWMODEL_H
+﻿#ifndef TABLEVIEWMODEL_H
 #define TABLEVIEWMODEL_H
 
 #include <QAbstractTableModel>
 #include <QSharedPointer>
 
+#include "../task.h"
 #include "Base/pluginmanager/observer.h"
-#include "../head.h"
 
 namespace TaskControlModel {
 

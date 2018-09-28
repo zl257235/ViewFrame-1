@@ -1,7 +1,7 @@
 ﻿/*!
  *  @brief     任务控制模块
  *  @details
- *  @author    wlc
+ *  @author    wey
  *  @version   1.0
  *  @date      2018.09.11
  *  @warning

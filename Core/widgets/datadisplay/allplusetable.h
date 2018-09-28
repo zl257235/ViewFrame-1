@@ -8,6 +8,7 @@
 #ifndef ALLPLUSETABLE_H
 #define ALLPLUSETABLE_H
 
+#include <QModelIndex>
 #include "Base/pluginmanager/rcomponent.h"
 
 namespace DataView {
@@ -37,11 +38,13 @@ public slots:
 private slots:
     void on_radioButton_RealityShow_clicked();
     void on_radioButton_HistoryShow_clicked();
+    void doubleClickedTable(QModelIndex index);
+    void clearTable();
 
 private:
     void initAllPulseTable();
-    void changeTableHeaderInfo(bool blRealityTypeFlag);
     void retranslateUi();
+    void setTableData();
 
 private:
     AllPluseTablePrivate * d_ptr;

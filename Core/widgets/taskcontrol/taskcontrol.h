@@ -1,14 +1,4 @@
-﻿/*!
- *  @brief     任务控制面板
- *  @details
- *  @author    wlc
- *  @version   1.0
- *  @date      2018.09.20
- *  @warning
- *  @copyright NanJing RenGu.
- *  @note
- */
-#ifndef TASKCONTROL_H
+﻿#ifndef TASKCONTROL_H
 #define TASKCONTROL_H
 
 #include <QSharedPointer>
@@ -44,21 +34,15 @@ private slots:
 
     void addNewTask();          /*!< 添加任务 */
     void distributeTask();      /*!< 下发任务 */
-    void resetTask();           /*!< 重置任务状态 */
-
-    void updateTaskState();
-    void dispatchOver();
 
     void tableContextPoint(QPoint point);
 
+    virtual void timerEvent(QTimerEvent *event);
+    
 private:
+    void initNetWork();
     QModelIndex currentIndex(bool &validIndex);
     void showEditWindow(QModelIndex index);
-
-    void initDispatch();
-
-    template<class T>
-    bool executeCopy(TaskInfo * selectedTask);
 
 private:
     QSharedPointer<TaskControlPrivate> d_ptr;

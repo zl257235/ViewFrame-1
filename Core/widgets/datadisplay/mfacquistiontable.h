@@ -27,10 +27,12 @@ public:
 
 public slots:
     void recvMFAcquistionPara(char *buff, int len);
+    void clearTable();
 
 private:
     void initMFAcquistionTable();
     void retranslateUi();
+    QString getCurrentDate();
 
 private:
     MFAcquistionTablePrivate * d_ptr;

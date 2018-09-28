@@ -23,8 +23,6 @@ public:
     explicit DataDisplay(QWidget *parent = 0);
     ~DataDisplay();
 
-    void recvDataDisplayMessage(Datastruct::DataDisplayMessageType type,char *buff, int len);
-
     void onMessage(MessageType::MessType type);
     void retranslateUi();
 

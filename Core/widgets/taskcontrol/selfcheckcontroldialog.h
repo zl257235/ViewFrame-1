@@ -1,7 +1,7 @@
 ﻿/*!
  *  @brief     自检控制信息窗口
  *  @details
- *  @author    wlc
+ *  @author    wey
  *  @version   1.0
  *  @date      2018.09.11
  *  @warning

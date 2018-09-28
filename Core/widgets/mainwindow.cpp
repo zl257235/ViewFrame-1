@@ -18,9 +18,9 @@
 #include "healthmanage/healthinfopannel.h"
 
 #include "datadisplay/datadisplaypanel.h"
-#include "datadisplay/radiationsourcetable.h"
-#include "datadisplay/allplusetable.h"
-#include "datadisplay/mfacquistiontable.h"
+//#include "datadisplay/radiationsourcetable.h"
+//#include "datadisplay/allplusetable.h"
+//#include "datadisplay/mfacquistiontable.h"
 #include "datadisplay/radiasourcemap.h"
 #include "datadisplay/allplusegraphics.h"
 #include "datadisplay/mfacquisitiongraphics.h"
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initMenu();
     initComponent();
-
+	initNetwork();
     updateLanguage(curLanguageName);
 
     showMaximized();
@@ -291,9 +291,12 @@ void MainWindow::initComponent()
     HealthInfoDockPanel *healthControl = new HealthInfoDockPanel;
 
     //数据显示模块，每个页面都是dock
-    DataView::RadiationSourceTable * radiationTable = new DataView::RadiationSourceTable;
-    DataView::AllPluseTable * allPluseTable = new DataView::AllPluseTable;
-    DataView::MFAcquistionTable * acquistionTable = new DataView::MFAcquistionTable;
+    //DataView::RadiationSourceTable * radiationTable = new DataView::RadiationSourceTable;
+    radiationTable = new DataView::RadiationSourceTable;
+    //DataView::AllPluseTable * allPluseTable = new DataView::AllPluseTable;
+    allPluseTable = new DataView::AllPluseTable;
+    //DataView::MFAcquistionTable * acquistionTable = new DataView::MFAcquistionTable;
+    acquistionTable = new DataView::MFAcquistionTable;
     DataView::RadiaSourceMap * radiaSourceMap = new DataView::RadiaSourceMap;
     DataView::AllPluseGraphics * allPluseGraphics = new DataView::AllPluseGraphics;
     DataView::MFAcquisitionGraphics * mfGraphics = new DataView::MFAcquisitionGraphics;
@@ -332,5 +335,47 @@ void MainWindow::initComponent()
         comp->setFeatures(QDockWidget::DockWidgetMovable);
         comp->initialize();
         iter++;
+    }
+}
+
+/*!
+ * @brief   初始化网络组件
+ */
+void MainWindow::initNetwork()
+{
+    networkInterface=new NetworkInterface();
+    connect(networkInterface,SIGNAL(signalTransmit(int)),this,SLOT(recvTranst(int)));
+}
+
+void MainWindow::recvTranst(int iLen)
+{
+    QByteArray data;
+    char* pBuff;
+    data.resize(iLen);
+    if(iLen<12)
+    {
+        return;
+    }
+    networkInterface->recvData(data.data(),iLen);
+    pBuff=data.data();
+    unsigned short usId; //报文标识
+    int package;
+    memcpy(&package,pBuff,sizeof(int));
+    memcpy(&usId,pBuff,sizeof(usId));
+    if(package==0x1ACF1ACF)      //全脉冲
+    {
+        for(int i=0;i<10;i++)
+        {
+            qDebug("%d:%.2x",i,*(pBuff+i));
+        }
+         allPluseTable->recvAllPlusePara(pBuff,iLen);
+    }
+    else if(usId==0x1ACF)                //数据显示模块 辐射源
+    {
+        radiationTable->recvRSPara(pBuff,iLen);
+    }
+    else if(usId==0x5555)           //中频数据
+    {
+        acquistionTable->recvMFAcquistionPara(pBuff,iLen);
     }
 }

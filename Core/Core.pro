@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core gui xml charts
-QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -50,6 +49,7 @@ SOURCES += main.cpp \
     widgets/taskcontrol/selfcheckcontroldialog.cpp \
     widgets/taskcontrol/instrumentcontroldialog.cpp \
     widgets/taskcontrol/gathercontroldialog.cpp \
+    widgets/taskcontrol/task.cpp \
     widgets/healthmanage/fileOpt.cpp \
     widgets/healthmanage/healthinfopannel.cpp \
     widgets/healthmanage/healthstate_display.cpp \
@@ -64,9 +64,11 @@ SOURCES += main.cpp \
     widgets/datadisplay/radiasourcemap.cpp \
     widgets/datadisplay/radiationsourcetable.cpp \
     widgets/datadisplay/spectrumgraphics.cpp \
-    widgets/datadisplay/table.cpp \
     widgets/datadisplay/datadisplaypanel.cpp \
-    widgets/taskcontrol/net/taskdispatcher.cpp
+    widgets/datadisplay/modelview/tableviewmoderradiationsource.cpp \
+    widgets/datadisplay/modelview/tableviewdata.cpp \
+    widgets/datadisplay/radiationsourcetablerenovatedialog.cpp \
+    widgets/datadisplay/modelview/tableviewmodelcustom.cpp
 
 HEADERS  += \
     widgets/mainwindow.h \
@@ -88,6 +90,7 @@ HEADERS  += \
     widgets/taskcontrol/selfcheckcontroldialog.h \
     widgets/taskcontrol/instrumentcontroldialog.h \
     widgets/taskcontrol/gathercontroldialog.h \
+    widgets/taskcontrol/task.h \
     widgets/taskcontrol/head.h \
     widgets/healthmanage/fileOpt.h \
     widgets/healthmanage/healthinfopannel.h \
@@ -104,16 +107,19 @@ HEADERS  += \
     widgets/datadisplay/radiasourcemap.h \
     widgets/datadisplay/radiationsourcetable.h \
     widgets/datadisplay/spectrumgraphics.h \
-    widgets/datadisplay/table.h \
     widgets/datadisplay/datadisplaypanel.h \
-    widgets/taskcontrol/net/taskdispatcher.h
+    widgets/datadisplay/modelview/tableviewmoderradiationsource.h \
+    widgets/datadisplay/modelview/tableviewdata.h \
+    widgets/datadisplay/radiationsourcetablerenovatedialog.h \
+    widgets/datadisplay/modelview/tableviewmodelcustom.h
 
 FORMS    += mainwindow.ui \
     widgets/taskcontrol/gathercontroldialog.ui \
     widgets/datadisplay/mfacquisitiongraphics.ui \
     widgets/datadisplay/radiasourcemap.ui \
     widgets/datadisplay/radiationsourcetable.ui \
-    widgets/datadisplay/spectrumgraphics.ui
+    widgets/datadisplay/spectrumgraphics.ui \
+    widgets/datadisplay/radiationsourcetablerenovatedialog.ui
 
 win32-msvc2013{
     LIBS+= ../Lib/Base.lib

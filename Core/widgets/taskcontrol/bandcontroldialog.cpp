@@ -37,6 +37,9 @@ void BandControlDialogPrivate::initView()
 {
     mainWidget = new QWidget();
 
+    QRegExp rx("^((-[0-9]\\d*|[0-9]\\d*)\\.?)?([0-9]){5}$");  //浮点类型 可输入小数点后五位
+//    QRegExpValidator *m_IPValidator = new QRegExpValidator(rx, this);
+
     QGridLayout *gridLayout = new QGridLayout(mainWidget);
 
     QLabel * label_2 = new QLabel(mainWidget);

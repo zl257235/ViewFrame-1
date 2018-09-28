@@ -45,54 +45,54 @@ void DataDisplayPrivate::initView()
  */
 void DataDisplayPrivate::initAction()
 {
-    ActionContainer *menubar = ActionManager::instance()->createMenuBar(Constant::MENU_BAR);
-    menubar->insertGroup(Constant::G_HELP,Constant::DATA_VIEW);
+//    ActionContainer *menubar = ActionManager::instance()->createMenuBar(Constant::MENU_BAR);
+//    menubar->insertGroup(Constant::G_HELP,Constant::DATA_VIEW);
 
-    dataViewMenu = ActionManager::instance()->createMenu(Constant::DATA_VIEW);
-    dataViewMenu->appendGroup(Constant::DATA_VIEW);
-    menubar->addMenu(dataViewMenu, Constant::DATA_VIEW);
+//    dataViewMenu = ActionManager::instance()->createMenu(Constant::DATA_VIEW);
+//    dataViewMenu->appendGroup(Constant::DATA_VIEW);
+//    menubar->addMenu(dataViewMenu, Constant::DATA_VIEW);
 
-    radiaSourceAction = new QAction();
-    radiaSourceAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_RADIASOURCE);
-    QObject::connect(radiaSourceAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * radiaSourceTable = ActionManager::instance()->registAction(Constant::RADIASOURCETABLE_SETTING,radiaSourceAction);
-    dataViewMenu->addAction(radiaSourceTable,Constant::DATA_VIEW);
+//    radiaSourceAction = new QAction();
+//    radiaSourceAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_RADIASOURCE);
+//    QObject::connect(radiaSourceAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * radiaSourceTable = ActionManager::instance()->registAction(Constant::RADIASOURCETABLE_SETTING,radiaSourceAction);
+//    dataViewMenu->addAction(radiaSourceTable,Constant::DATA_VIEW);
 
-    allPluseAction = new QAction();
-    allPluseAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_ALLPLUSE);
-    QObject::connect(allPluseAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * allPluseTable = ActionManager::instance()->registAction(Constant::ALLPLUSETABLE_SETTING,allPluseAction);
-    dataViewMenu->addAction(allPluseTable,Constant::DATA_VIEW);
+//    allPluseAction = new QAction();
+//    allPluseAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_ALLPLUSE);
+//    QObject::connect(allPluseAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * allPluseTable = ActionManager::instance()->registAction(Constant::ALLPLUSETABLE_SETTING,allPluseAction);
+//    dataViewMenu->addAction(allPluseTable,Constant::DATA_VIEW);
 
-    mfAcquisitionAction = new QAction();
-    mfAcquisitionAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_MFACQUISITION);
-    QObject::connect(mfAcquisitionAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * mfAcquisitionTable = ActionManager::instance()->registAction(Constant::MFACQUISITIONTABLE_SETTING,mfAcquisitionAction);
-    dataViewMenu->addAction(mfAcquisitionTable,Constant::DATA_VIEW);
+//    mfAcquisitionAction = new QAction();
+//    mfAcquisitionAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::TABLE_MFACQUISITION);
+//    QObject::connect(mfAcquisitionAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * mfAcquisitionTable = ActionManager::instance()->registAction(Constant::MFACQUISITIONTABLE_SETTING,mfAcquisitionAction);
+//    dataViewMenu->addAction(mfAcquisitionTable,Constant::DATA_VIEW);
 
-    radiaSourceMapAction = new QAction();
-    radiaSourceMapAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::MAP_RADIASOURCE);
-    QObject::connect(radiaSourceMapAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * radiaSourceMapActionTable = ActionManager::instance()->registAction(Constant::RADIASOURCEMAP_SETTING,radiaSourceMapAction);
-    dataViewMenu->addAction(radiaSourceMapActionTable,Constant::DATA_VIEW);
+//    radiaSourceMapAction = new QAction();
+//    radiaSourceMapAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::MAP_RADIASOURCE);
+//    QObject::connect(radiaSourceMapAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * radiaSourceMapActionTable = ActionManager::instance()->registAction(Constant::RADIASOURCEMAP_SETTING,radiaSourceMapAction);
+//    dataViewMenu->addAction(radiaSourceMapActionTable,Constant::DATA_VIEW);
 
-    allPluseGraphicsAction = new QAction();
-    allPluseGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_ALLPLUSE);
-    QObject::connect(allPluseGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * allPluseGraphicsActionTable = ActionManager::instance()->registAction(Constant::ALLPLUSEGRAPHICS_SETTING,allPluseGraphicsAction);
-    dataViewMenu->addAction(allPluseGraphicsActionTable,Constant::DATA_VIEW);
+//    allPluseGraphicsAction = new QAction();
+//    allPluseGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_ALLPLUSE);
+//    QObject::connect(allPluseGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * allPluseGraphicsActionTable = ActionManager::instance()->registAction(Constant::ALLPLUSEGRAPHICS_SETTING,allPluseGraphicsAction);
+//    dataViewMenu->addAction(allPluseGraphicsActionTable,Constant::DATA_VIEW);
 
-    mfAcquisitionGraphicsAction = new QAction();
-    mfAcquisitionGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_MFACQUISITION);
-    QObject::connect(mfAcquisitionGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * mfAcquisitionGraphicsActionTable = ActionManager::instance()->registAction(Constant::MFACQUISITIONGRAPHICS_SETTING,mfAcquisitionGraphicsAction);
-    dataViewMenu->addAction(mfAcquisitionGraphicsActionTable,Constant::DATA_VIEW);
+//    mfAcquisitionGraphicsAction = new QAction();
+//    mfAcquisitionGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_MFACQUISITION);
+//    QObject::connect(mfAcquisitionGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * mfAcquisitionGraphicsActionTable = ActionManager::instance()->registAction(Constant::MFACQUISITIONGRAPHICS_SETTING,mfAcquisitionGraphicsAction);
+//    dataViewMenu->addAction(mfAcquisitionGraphicsActionTable,Constant::DATA_VIEW);
 
-    spectrumGraphicsAction = new QAction();
-    spectrumGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_SPECTRUM);
-    QObject::connect(spectrumGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
-    Action * spectrumGraphicsActionTable = ActionManager::instance()->registAction(Constant::SPECTRUMGRAPHICS_SETTING,spectrumGraphicsAction);
-    dataViewMenu->addAction(spectrumGraphicsActionTable,Constant::DATA_VIEW);
+//    spectrumGraphicsAction = new QAction();
+//    spectrumGraphicsAction->setProperty(ACTION_TYPE_PROPERTY,Datastruct::GRAPHICSE_SPECTRUM);
+//    QObject::connect(spectrumGraphicsAction,SIGNAL(triggered(bool)),q_ptr,SLOT(switchDockVisible(bool)));
+//    Action * spectrumGraphicsActionTable = ActionManager::instance()->registAction(Constant::SPECTRUMGRAPHICS_SETTING,spectrumGraphicsAction);
+//    dataViewMenu->addAction(spectrumGraphicsActionTable,Constant::DATA_VIEW);
 }
 
 DataDisplay::DataDisplay(QWidget *parent) :
@@ -101,18 +101,21 @@ DataDisplay::DataDisplay(QWidget *parent) :
     RSingleton<Base::Subject>::instance()->attach(this);
 
     retranslateUi();
-
-//    connect(this,SIGNAL(radiaSourceSignal(char*, int)),d_ptr->rsTable,SLOT(recvRSPara(char*,int)));
 }
 
 DataDisplay::~DataDisplay()
 {
 }
 
-void DataDisplay::recvDataDisplayMessage(Datastruct::DataDisplayMessageType type, char *buff, int len)
+void DataDisplay::onMessage(MessageType::MessType type)
 {
-//    if(type==MESSAGE_RADIASOURCE)
-//        emit radiaSourceSignal(buff,len);
+    switch(type){
+        case MessageType::MESS_LAN_CHANGED:
+            retranslateUi();
+            break;
+        default:
+            break;
+    }
 }
 
 /*!
@@ -126,17 +129,6 @@ void DataDisplay::switchDockVisible(bool flag)
 //        default:
 //            break;
 //    }
-}
-
-void DataDisplay::onMessage(MessageType::MessType type)
-{
-    switch(type){
-        case MessageType::MESS_LAN_CHANGED:
-            retranslateUi();
-            break;
-        default:
-            break;
-    }
 }
 
 void DataDisplay::retranslateUi()
